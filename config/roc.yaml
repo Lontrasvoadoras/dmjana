@@ -1,0 +1,40 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 10: curva ROC dos programas (pedido do usuário, 09/10/2026)
+# Pergunta: os genes de cada programa separam, em mulheres que NÃO ajudaram a escolhê-los, quem tem DM2 de quem não tem?
+#  10.1 deixar um estudo de fora: em cada rodada, com os estudos de treino (sem o estudo testado) escolhe-se de novo o
+#       módulo (menor p do efeito do DM2) e os genes (regra fixa abaixo), com o sentido de cada gene; no estudo testado,
+#       escore de sentido fixo por mulher (média z dos que sobem - média z dos que descem) e AUC. Nada é ajustado no
+#       estudo testado. AUCs combinadas por meta-análise.
+#  10.2 validação externa: treino com todos os estudos principais do tecido; teste nos estudos que ficaram só na
+#       sensibilidade (GSE156993 e GSE189005 no sangue, GSE21340 no músculo), com as limitações de cada um.
+#  Nulos: conjuntos de genes sorteados do mesmo tamanho (sentido também tirado do treino) e permutação dos rótulos
+#  (Wilcoxon exato). Escopo: só mulheres de 40-60, DM2 x ND.
+# =============================================================================
+versao: 1
+data: "2026-10-09"
+
+tecidos: ["ilhotas", "musculo", "sangue", "figado"]   # tecidos com programa; fígado: 1 estudo principal (GSE130991), sem deixar-um-de-fora, só validação no GSE15653
+# regra fixa de escolha dos genes no treino (dentro do módulo escolhido)
+genes:
+  p_max: 0.05            # p do treino (Hartung-Knapp com 3+ estudos; efeito fixo com 2; p do próprio estudo com 1)
+  min: 10                # se menos genes passarem, usam-se os 'reserva' de menor p no mesmo sentido em todos os estudos de treino
+  reserva: 20
+  max: 50                # no máximo os 50 de menor p
+min_genes_teste: 5       # genes do conjunto medidos no estudo testado; abaixo disso, "não avaliável"
+nulos_sorteios: 1000
+semente: 1
+externos:
+  sangue: ["GSE156993", "GSE189005"]
+  musculo: ["GSE21340"]
+  figado: ["GSE15653"]
+limitacoes_externos:
+  GSE156993: "casos com DM2 + dislipidemia + periodontite x controles saudáveis (comorbidades não pareadas)"
+  GSE189005: "lote (data de leitura) confundido com o grupo: controles e DM2 lidos em datas diferentes"
+  GSE21340: "lote confundido com o grupo; array antigo com ~5 mil genes"
+  GSE15653: "estudo pequeno (3 x 4); controles misturam magras e obesas; replicação do fígado (dois níveis)"
+# tecido com 1 estudo principal (fígado, GSE130991): validação cruzada DENTRO do estudo (pedido do usuário, 10/10/2026)
+# mulheres de 40-60 em 'dobras' partes estratificadas por status; modelo, módulo e genes refeitos sem a parte testada
+validacao_cruzada:
+  dobras: 5
+  repeticoes: 10
+  sorteios_nulo: 200

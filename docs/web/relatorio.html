@@ -1,0 +1,681 @@
+<title>DM2 na faixa de 40–60 anos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: relatório de laboratório — índice fixo à esquerda, coluna de leitura de ~68 caracteres, tabelas e gráficos podem ocupar a largura toda */
+:root{
+  --bg:#f3f6f6; --paper:#ffffff; --ink:#18252b; --muted:#56666d; --rule:#d5dfe0; --accent:#0f6e74; --accent-soft:#dcecec;
+  --ilhotas:#0f6e74; --musculo:#a2442d; --sangue:#7b3f8c; --figado:#7a6a1f; --adiposo:#4d6a2e;
+  --warn:#9a5b00; --fig-bg:#ffffff;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-label:"IBM Plex Sans Condensed", "Arial Narrow", Arial, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111a1d; --paper:#172327; --ink:#e3ecec; --muted:#9db0b4; --rule:#2c3d42; --accent:#5cc2c6; --accent-soft:#1d3a3d;
+  --ilhotas:#5cc2c6; --musculo:#e58a70; --sangue:#c08ad0; --figado:#d2bd5c; --adiposo:#9cc56f; --warn:#e3a54a; --fig-bg:#f4f6f6; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#111a1d; --paper:#172327; --ink:#e3ecec; --muted:#9db0b4; --rule:#2c3d42; --accent:#5cc2c6; --accent-soft:#1d3a3d;
+  --ilhotas:#5cc2c6; --musculo:#e58a70; --sangue:#c08ad0; --figado:#d2bd5c; --adiposo:#9cc56f; --warn:#e3a54a; --fig-bg:#f4f6f6; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.6}
+.wrap{max-width:1180px; margin:0 auto; padding-inline:20px; padding-block:28px 64px; display:grid; grid-template-columns:220px minmax(0,1fr); gap:44px}
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 20px); align-self:start; font-family:var(--f-label); font-size:14px}
+nav.toc .lbl{letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-size:12px; margin-bottom:8px}
+nav.toc ol{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+nav.toc a{color:var(--ink); text-decoration:none; display:block; padding:4px 8px; border-left:2px solid var(--rule)}
+nav.toc a:hover,nav.toc a:focus-visible{border-left-color:var(--accent); color:var(--accent); outline:none}
+main{min-width:0}
+header.cab{border-bottom:1px solid var(--rule); padding-bottom:22px; margin-bottom:8px}
+.eyebrow{font-family:var(--f-label); text-transform:uppercase; letter-spacing:.09em; font-size:13px; color:var(--accent)}
+h1{font-family:var(--f-display); font-weight:700; font-size:clamp(28px,4.2vw,42px); line-height:1.15; margin:.25em 0 .35em; text-wrap:balance; max-width:22ch}
+.sub{color:var(--muted); max-width:68ch; margin:0}
+.meta{font-family:var(--f-label); font-size:13.5px; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:14px}
+h2{font-family:var(--f-display); font-size:27px; font-weight:700; margin:2.2em 0 .5em; text-wrap:balance; scroll-margin-top:20px}
+h3{font-family:var(--f-label); font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:1.8em 0 .4em}
+p,ul{max-width:68ch}
+p{margin:.6em 0}
+ul{padding-left:1.2em}
+li{margin:.3em 0}
+.num{font-family:var(--f-mono); font-variant-numeric:tabular-nums; font-size:.92em}
+.chip{font-family:var(--f-label); font-size:12.5px; letter-spacing:.04em; padding:1px 8px; border-radius:3px; border:1px solid currentColor; white-space:nowrap}
+.t-ilhotas{color:var(--ilhotas)} .t-musculo{color:var(--musculo)} .t-sangue{color:var(--sangue)} .t-figado{color:var(--figado)} .t-adiposo{color:var(--adiposo)}
+.resumo{background:var(--paper); border:1px solid var(--rule); padding:20px 24px; margin-top:22px}
+.resumo p{max-width:none}
+.programas{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-top:20px}
+.prog{background:var(--paper); border-top:3px solid currentColor; padding:14px 16px 16px; min-width:0}
+.prog h4{margin:6px 0 4px; font-family:var(--f-display); font-size:19px; color:var(--ink)}
+.prog .dir{font-family:var(--f-label); font-size:13px; letter-spacing:.04em}
+.prog p{font-size:15px; color:var(--ink); margin:.4em 0 0}
+.prog .genes{font-family:var(--f-mono); font-size:12.5px; color:var(--muted); margin-top:8px; overflow-wrap:anywhere}
+.nota{border-left:3px solid var(--warn); padding:4px 0 4px 14px; color:var(--ink); max-width:68ch; margin:1em 0; font-size:15.5px}
+.tbl{overflow-x:auto; margin:14px 0; background:var(--paper); border:1px solid var(--rule)}
+table{border-collapse:collapse; width:100%; font-size:14.5px; font-family:var(--f-label)}
+th,td{padding:7px 12px; text-align:left; border-bottom:1px solid var(--rule); vertical-align:top}
+th{font-weight:600; color:var(--muted); font-size:13px; letter-spacing:.03em; background:var(--bg)}
+td.r,th.r{text-align:right; font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+tr.sens td{color:var(--muted)}
+figure{margin:18px 0; background:var(--paper); border:1px solid var(--rule); padding:14px}
+figure img{display:block; background:var(--fig-bg); border-radius:2px}
+figure.alta img{max-width:560px; width:100%}
+.passos{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:16px 0}
+.passo{background:var(--paper); border:1px solid var(--rule); padding:12px 14px; min-width:0}
+.passo b{display:block; font-family:var(--f-label); font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); margin-bottom:4px}
+.passo p{font-size:15px; margin:0}
+.fluxo{display:grid; gap:0; margin:18px 0}
+.etapa-f{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:14px; align-items:stretch}
+.caixa{background:var(--paper); border:1px solid var(--rule); border-left:4px solid var(--accent); padding:10px 14px; min-width:0}
+.caixa .n{font-family:var(--f-mono); font-size:22px; font-weight:500; color:var(--accent); display:block; line-height:1.2}
+.caixa .t{font-family:var(--f-label); font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted)}
+.caixa p{font-size:14.5px; margin:4px 0 0}
+.fora{border:1px dashed var(--rule); padding:10px 14px; font-size:14px; min-width:0; background:transparent}
+.fora b{font-family:var(--f-label); font-size:12.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--warn); display:block; margin-bottom:2px}
+.fora ul{margin:0; padding-left:1.1em; max-width:none} .fora li{margin:.15em 0}
+.seta{font-family:var(--f-label); color:var(--muted); font-size:18px; padding:2px 0 2px 18px}
+.final{border-left-color:var(--ilhotas); background:var(--accent-soft)}
+.status{font-family:var(--f-label); font-size:12.5px; letter-spacing:.04em; padding:2px 8px; border-radius:3px; white-space:nowrap; border:1px solid currentColor}
+.st-ok{color:var(--ilhotas)} .st-caiu{color:var(--warn)}
+@media (max-width:700px){ .etapa-f{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:900px){ .passos{grid-template-columns:minmax(0,1fr)} }
+figcaption{font-family:var(--f-label); font-size:14px; color:var(--muted); margin-top:10px; max-width:80ch}
+.grafico svg{display:block; width:100%; height:auto}
+.grafico text{font-family:"IBM Plex Sans Condensed", Arial, sans-serif; fill:var(--ink)}
+.grafico .eixo{stroke:var(--rule)}
+.grafico .ref{stroke:var(--muted); stroke-dasharray:3 3}
+.refs li{font-size:15px; margin:.5em 0}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+footer{margin-top:48px; padding-top:16px; border-top:1px solid var(--rule); font-family:var(--f-label); font-size:13.5px; color:var(--muted)}
+@media (max-width:900px){ .wrap{grid-template-columns:minmax(0,1fr); gap:10px} nav.toc{position:static; border-bottom:1px solid var(--rule); padding-bottom:12px} nav.toc ol{grid-template-columns:repeat(2,minmax(0,1fr))} .programas{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:480px){ body{font-size:16px} .wrap{padding-inline:16px} nav.toc ol{grid-template-columns:minmax(0,1fr)} }
+@media (prefers-reduced-motion:reduce){ *{scroll-behavior:auto!important} }
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Índice">
+  <div class="lbl">Neste relatório</div>
+  <ol>
+    <li><a href="#resumo">Resumo</a></li>
+    <li><a href="#introducao">Introdução</a></li>
+    <li><a href="#selecao-estudos">Seleção dos estudos</a></li>
+    <li><a href="#metodos">Métodos</a></li>
+    <li><a href="#estudos">Estudos e amostras</a></li>
+    <li><a href="#genes">Genes (DEGs)</a></li>
+    <li><a href="#wgcna">Redes (WGCNA)</a></li>
+    <li><a href="#vias">Vias (GSEA)</a></li>
+    <li><a href="#selecao">Seleção dos genes</a></li>
+    <li><a href="#programas">Programas</a></li>
+    <li><a href="#figado">Fígado em dois níveis</a></li>
+    <li><a href="#destino">Destino dos programas</a></li>
+    <li><a href="#celula">Célula única</a></li>
+    <li><a href="#roc">Curva ROC</a></li>
+    <li><a href="#sanidade">Qualidade</a></li>
+    <li><a href="#discussao">Discussão</a></li>
+    <li><a href="#limitacoes">Limitações</a></li>
+    <li><a href="#conclusoes">Conclusões</a></li>
+    <li><a href="#referencias">Referências</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="cab">
+  <div class="eyebrow">Reanálise de dados públicos · GEO</div>
+  <h1>DM2 em mulheres de 40 a 60 anos</h1>
+  <p class="sub">Reanálise multitecidual da expressão gênica: o que o diabetes tipo 2 muda em ilhotas, fígado, músculo, tecido adiposo e sangue de mulheres na faixa da transição menopausal.</p>
+  <div class="meta"><span>Relatório de 12/10/2026 · versão 9</span><span>14 estudos · 342 mulheres · 5 tecidos</span><span>Detalhes por etapa nos documentos Word do workflow</span></div>
+</header>
+
+<section id="resumo">
+  <div class="resumo">
+    <p><strong>Objetivo.</strong> Descrever como o DM2 altera a expressão gênica em mulheres de 40 a 60 anos, em cinco tecidos.</p>
+    <p><strong>Estudos.</strong> Das 695 séries do GEO, 14 estudos passaram por todos os critérios: 342 mulheres de 40–60 anos (200 com DM2, 142 sem diabetes) em 5 tecidos. Dois deles foram resgatados de estudos sem rótulo de DM2, usando exames e grupos do estudo; o maior é o GSE130991 (fígado, 146 × 58 mulheres).</p>
+    <p><strong>Como.</strong> Busca sistemática no GEO, curadoria de cada amostra, processamento uniforme e efeito do DM2 em cada estudo só nas mulheres de 40–60. Depois: meta-análise por tecido (Hartung-Knapp), redes de coexpressão, vias por escore competitivo calibrado contra conjuntos de genes sorteados, painel por programa, validação com célula única e curva ROC deixando um estudo de fora.</p>
+    <p><strong>Resultado.</strong> Nenhum gene foi replicado em 2 ou mais estudos com FDR &lt; 0,05. O programa das ilhotas é o mais reprodutível: foi reescolhido em 3 de 4 rodadas sem ver o estudo testado, com AUC combinada de <span class="num">0,69</span>. Ele se explica em parte por mais células estreladas e em parte por ativação delas. No fígado, o GSE130991 mostrou módulos de retículo, secreção de proteínas e metabolismo maiores no DM2, que não se repetiram no estudo pequeno (GSE15653). Separando os remédios, esse sinal some nas mulheres com DM2 ainda sem tratamento e aparece ao comparar tratadas com não tratadas: é, em grande parte, sinal de DM2 tratada. Os programas de músculo e sangue não se reproduziram.</p>
+    <p><strong>Curva ROC.</strong> No fígado, com validação cruzada dentro do GSE130991, os módulos separam DM2 com AUC <span class="num">0,64</span>, e <span class="num">0,73</span> com a otimização aninhada (genes do genoma inteiro); no estudo pequeno de replicação, 0,50. Nos tecidos com vários estudos, otimizar não melhorou a separação. Um conjunto comum aos tecidos chegou a AUC <span class="num">0,63</span>, puxada pelo fígado; nas ilhotas ficou no acaso. O painel das ilhotas não separa DM2 em adiposo, músculo ou sangue, mas tem uma AUC pequena e significativa no fígado (<span class="num">0,66</span>, 204 mulheres).</p>
+    <p><strong>Conclusão.</strong> Os achados são hipóteses. O estroma ativado das ilhotas é o candidato mais sólido para estudos dirigidos; o módulo do fígado é uma descoberta de um estudo grande que pede replicação em outra coorte grande.</p>
+  </div>
+  <div class="programas">
+    <article class="prog t-ilhotas"><span class="chip">ilhotas · 4 estudos</span><h4>Estroma ativado</h4><div class="dir">maior no DM2 · módulo M6, 188 genes</div><p>Células estreladas: mais numerosas e mais ativadas nas mulheres com DM2.</p><div class="genes">THBS2 · LTBP1 · IL6 · HGF · TGFB3 · APOD · SLIT2</div></article>
+    <article class="prog t-musculo"><span class="chip">músculo · 2 estudos</span><h4>Mitocôndria</h4><div class="dir">menor no DM2 · módulo M4, 259 genes</div><p>Cadeia respiratória e PGC-1α, o achado clássico do DM2 no músculo. Não se reproduziu como classificador.</p><div class="genes">NDUFA8 · NDUFS1 · COX5B · TFAM · PPARGC1A</div></article>
+    <article class="prog t-figado"><span class="chip">fígado · 1 estudo grande</span><h4>Retículo e secreção</h4><div class="dir">maior no DM2 tratada · módulos M6 (238) e M15 (54 genes)</div><p>Descoberta do GSE130991 (146 × 58). Some nas mulheres com DM2 sem tratamento: é, em grande parte, sinal de tratamento. Não replicou no GSE15653.</p><div class="genes">P4HB · COPE · VCP · YIF1A · SEC23A · SEC24A · COPB2</div></article>
+  </div>
+</section>
+
+<section id="introducao">
+  <h2>Introdução</h2>
+  <p>Na transição menopausal, a queda do estrogênio muda a distribuição de gordura, a sensibilidade à insulina e o perfil inflamatório. A maior parte dos estudos de expressão gênica em DM2 mistura sexos e idades, o que dilui efeitos próprios dessa fase.</p>
+  <p>Este trabalho reanalisa dados públicos restritos a mulheres de 40 a 60 anos, comparando DM2 e sem diabetes em cada tecido. Estudos de plataformas diferentes não são misturados, e a pouca quantidade de amostras é tratada com métodos adequados.</p>
+  <p class="nota"><strong>Escopo.</strong> Só mulheres de 40–60 anos, DM2 × sem diabetes. Não há comparação com homens nem com outras idades. Amostras fora desse grupo entram só para estimar a variabilidade técnica, quando indicado.</p>
+</section>
+
+
+<section id="selecao-estudos">
+  <h2>Seleção dos estudos</h2>
+  <p>A seleção foi feita em cinco filtros, das 695 séries do GEO até os 14 estudos da análise principal, mais um estudo de replicação do fígado. Cada exclusão tem um motivo registrado. Os casos de decisão foram aprovados pela pesquisadora.</p>
+  <div class="fluxo">
+    <div class="etapa-f"><div class="caixa"><span class="t">1 · Busca no GEO</span><span class="n">695 séries</span><p>DM2 em ilhotas, fígado, músculo esquelético, tecido adiposo e sangue, com estudos-semente para conferir a sensibilidade da busca.</p></div>
+      <div class="fora"><b>Excluídas na triagem por título e resumo: 188</b><ul><li>menos de 4 amostras (37)</li><li>tecido fora do escopo: rim, retina, ferida (≈ 50)</li><li>câncer, linhagens celulares, células derivadas de células-tronco</li></ul></div></div>
+    <div class="seta">↓</div>
+    <div class="etapa-f"><div class="caixa"><span class="t">2 · Curadoria das amostras</span><span class="n">507 estudos</span><p>415 incluídos e 92 que pediam revisão. 40.803 amostras com sexo, idade, status, tecido, condição basal e doadora harmonizados.</p></div>
+      <div class="fora"><b>Sem dado essencial ou sem amostra apta: 480</b><ul><li>sem status DM2 / sem diabetes (276) — 2 resgatados depois (ver passo 3)</li><li>sem sexo declarado (126)</li><li>sem idade (32)</li><li>menos de 2 mulheres de 40–60 com DM2 e 2 sem (30)</li><li>sem amostra apta no tecido: material cultivado, sob intervenção ou fora do escopo (9)</li><li>SuperSeries cujas amostras já estão nas subséries (7)</li></ul></div></div>
+    <div class="seta">↓</div>
+    <div class="etapa-f"><div class="caixa"><span class="t">3 · Resgate, sexo pela expressão e decisões</span><span class="n">20 elegíveis</span><p>Resgate de estudos sem rótulo de DM2: GSE130991 (fígado; DM2 por HbA1c ≥ 6,5% ou glicemia de jejum ≥ 7,0 mmol/L, critérios da ADA, ou em tratamento para diabetes) e GSE250283 (sangue; grupos “DM sem doença coronariana” × “saudáveis”). 5 estudos sem sexo declarado tiveram o sexo inferido pela expressão; nenhum chegou a ser elegível.</p></div>
+      <div class="fora"><b>Excluídos por decisão: 11</b><ul><li>sexo pela expressão: 1 não resgatado; 2 com poucas mulheres de 40–60; GSE43950 (perfil de diabetes tipo 1 no artigo); GSE128665 (células possivelmente cultivadas; grupo mistura DM2 e resistência à insulina)</li><li>doadoras repetidas: GSE38642 (mesmos doadores do GSE41762), GSE86468 (mesmos 8 doadores do GSE86469), GSE189007 (mesmos arquivos do GSE189005); GSE50244 (67 de 89 doadores repetem o GSE41762, confirmados pela expressão no array GSE50397, da mesma plataforma, e por sexo, IMC e HbA1c iguais; os 22 doadores novos não têm mulher de 40–60 com DM2) e GSE50397</li><li>GSE158055: DM2 só como comorbidade de COVID-19</li></ul></div></div>
+    <div class="seta">↓</div>
+    <div class="etapa-f"><div class="caixa"><span class="t">4 · Processamento e controle de qualidade</span><span class="n">18 prontos</span><p>Estudos processados a partir dos dados brutos (ou da matriz do autor, quando os brutos eram inviáveis, como os 21,9 GB do GSE130991), com controle de qualidade por amostra.</p></div>
+      <div class="fora"><b>Separados: 3</b><ul><li>lote confundido com o grupo (controles e DM2 lidos em datas diferentes): GSE189005, GSE21340 → só sensibilidade</li><li>GSE316126: painel NanoString de ~750 genes → análise dirigida à parte</li></ul></div></div>
+    <div class="seta">↓</div>
+    <div class="etapa-f"><div class="caixa final"><span class="t">5 · Análise principal</span><span class="n">14 estudos · 342 mulheres</span><p>200 com DM2 e 142 sem diabetes, em 5 tecidos: ilhotas (4), adiposo (4), sangue (3), músculo (2) e fígado (1 grande).</p></div>
+      <div class="fora"><b>Fora da análise principal: 3</b><ul><li>GSE15653 (fígado, 3 × 4): replicação do GSE130991, por decisão da pesquisadora</li><li>GSE23561: matriz do autor com zeros na maioria das sondas, só 773 genes estimáveis</li><li>GSE156993: casos com DM2, dislipidemia e periodontite contra controles saudáveis; o contraste não isola o DM2 → só sensibilidade</li></ul></div></div>
+  </div>
+  <div class="passos">
+    <div class="passo"><b>Critérios de inclusão</b><p>Humano; expressão de mRNA (array, RNA-seq ou célula única); tecido de interesse; amostra em condição basal e não cultivada (ilhotas isoladas são aceitas); status DM2 ou sem diabetes (declarado ou definido por exames pelos critérios da ADA; pré-diabetes fica de fora); sexo e idade conhecidos; pelo menos 2 mulheres de 40–60 com DM2 e 2 sem diabetes; uma amostra por doadora.</p></div>
+    <div class="passo"><b>Critérios de exclusão</b><p>Linhagens e células cultivadas ou diferenciadas; amostras sob intervenção (exercício, clamp, fármaco); diabetes tipo 1 ou não definido; doadoras repetidas entre séries; lote confundido com o grupo; contraste que não isola o DM2; matriz sem genes estimáveis.</p></div>
+    <div class="passo"><b>Mulheres de 40–60 por tecido</b><p>Ilhotas 12 com DM2 / 24 sem; adiposo 14 / 11; músculo 13 / 20; sangue 15 / 29; fígado 146 / 58 (mais 3 / 4 na replicação).</p></div>
+  </div>
+</section>
+
+<section id="metodos">
+  <h2>Métodos</h2>
+  <h3>Busca e curadoria</h3>
+  <p>Busca sistemática no GEO por DM2 em ilhotas, fígado, músculo esquelético, tecido adiposo e sangue, com estudos-semente para medir a sensibilidade da busca. Foram encontradas <span class="num">695</span> séries. Em <span class="num">507</span> estudos, as <span class="num">40.803</span> amostras tiveram harmonizados sexo, idade, status, tecido, condição basal, material não cultivado e doadora única. Quando o sexo não era declarado, foi inferido pela expressão (XIST e genes do cromossomo Y). Um estudo era elegível com pelo menos 2 mulheres de 40–60 com DM2 e 2 sem diabetes. Estudos sem rótulo de DM2 foram resgatados quando havia exames de cada pessoa (HbA1c e glicemia de jejum; em tratamento para diabetes = DM2) ou grupos do estudo. Doadoras repetidas entre séries foram retiradas.</p>
+  <h3>Processamento</h3>
+  <p>Cada estudo foi processado sozinho, a partir dos dados brutos quando viáveis (senão, da matriz do autor, registrado): RMA para arrays Affymetrix, neqc/normexp para Illumina e Agilent, contagens com TMM para RNA-seq e pseudo-bulk por doadora para célula única. O controle de qualidade por amostra checou sexo genético, conectividade, biblioteca, número de células e lote. Só genes codificantes de proteína. As matrizes não foram juntadas: o que se combina são os tamanhos de efeito.</p>
+  <h3>Efeito do DM2 e meta-análise</h3>
+  <p>Em cada estudo foi ajustado um modelo linear (limma, voom ou limma-trend) só com as mulheres de 40–60, com o lote como covariável quando possível. O efeito padronizado é o g de Hedges, com variância tirada do próprio ajuste do limma.</p>
+  <p>Por tecido, os efeitos foram combinados por meta-análise de efeitos aleatórios com Hartung-Knapp modificado, mais adequado com poucos estudos (IntHout et al., 2014). Em tecidos com só 2 estudos, o nível exploratório usa o efeito fixo. Ao lado, testes combinados: Stouffer, rOP calibrado e Cochran Q. No fígado, o GSE130991 é a análise e o GSE15653, a replicação (decisão da pesquisadora): o estudo pequeno não veta o grande.</p>
+  <p>As vias foram testadas por escore competitivo por amostra, que pergunta se a via muda mais que o resto do genoma. O p de cada via foi calibrado contra 2.000 conjuntos de genes sorteados do mesmo tamanho: vale o maior entre o p do modelo e o p empírico. Sensibilidades: deixar um estudo de fora, IMC, composição celular, idade, lote e medicação (estatina no GSE130991; controles em metformina retirados do GSE18732).</p>
+  <h3>Redes, painel e validações</h3>
+  <p>As redes de coexpressão (WGCNA) foram construídas por consenso, com ligações e módulos exigidos em pelo menos 2 estudos. A rede não usa o status de DM2; o eigengene de cada módulo é testado como um gene.</p>
+  <p>O painel organiza os genes por programa. A validação com célula única usou pseudo-bulk por tipo celular e deconvolução por mínimos quadrados não negativos, testada antes numa composição conhecida. A curva ROC escolhe genes sem o estudo testado. Mais de 1.400 verificações automáticas de sanidade acompanham o fluxo.</p>
+</section>
+
+<section id="estudos">
+  <h2>Estudos e amostras</h2>
+  <p>A análise principal tem 14 estudos e 342 mulheres de 40–60 anos (200 com DM2, 142 sem diabetes). Um estudo é a replicação do fígado e três ficaram só na sensibilidade.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Estudo</th><th>Tecido</th><th>Dado</th><th class="r">DM2</th><th class="r">Sem DM2</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>GSE200678</td><td class="t-adiposo">adiposo</td><td>RNA-seq</td><td class="r">4</td><td class="r">2</td><td>principal</td></tr>
+      <tr><td>GSE133666</td><td class="t-adiposo">adiposo</td><td>array</td><td class="r">4</td><td class="r">3</td><td>principal</td></tr>
+      <tr><td>GSE198922</td><td class="t-adiposo">adiposo</td><td>RNA-seq (matriz do autor)</td><td class="r">4</td><td class="r">4</td><td>principal</td></tr>
+      <tr><td>GSE29226</td><td class="t-adiposo">adiposo</td><td>array Illumina</td><td class="r">2</td><td class="r">2</td><td>principal</td></tr>
+      <tr><td>GSE130991</td><td class="t-figado">fígado</td><td>array (matriz do autor); DM2 por exames e tratamento</td><td class="r">146</td><td class="r">58</td><td>principal (descoberta)</td></tr>
+      <tr><td>GSE41762</td><td class="t-ilhotas">ilhotas</td><td>array</td><td class="r">6</td><td class="r">12</td><td>principal</td></tr>
+      <tr><td>GSE221156</td><td class="t-ilhotas">ilhotas</td><td>célula única (pseudo-bulk)</td><td class="r">2</td><td class="r">4</td><td>principal</td></tr>
+      <tr><td>GSE76895</td><td class="t-ilhotas">ilhotas</td><td>array</td><td class="r">2</td><td class="r">6</td><td>principal</td></tr>
+      <tr><td>GSE86469</td><td class="t-ilhotas">ilhotas</td><td>célula única (pseudo-bulk)</td><td class="r">2</td><td class="r">2</td><td>principal</td></tr>
+      <tr><td>GSE18732</td><td class="t-musculo">músculo</td><td>array</td><td class="r">10</td><td class="r">12</td><td>principal</td></tr>
+      <tr><td>GSE25462</td><td class="t-musculo">músculo</td><td>array</td><td class="r">3</td><td class="r">8</td><td>principal</td></tr>
+      <tr><td>GSE184050</td><td class="t-sangue">sangue</td><td>RNA-seq (matriz do autor)</td><td class="r">9</td><td class="r">19</td><td>principal</td></tr>
+      <tr><td>GSE250283</td><td class="t-sangue">sangue</td><td>array Illumina; DM sem doença coronariana × saudáveis</td><td class="r">4</td><td class="r">8</td><td>principal</td></tr>
+      <tr><td>GSE249102</td><td class="t-sangue">sangue</td><td>array Agilent</td><td class="r">2</td><td class="r">2</td><td>principal</td></tr>
+      <tr class="sens"><td>GSE15653</td><td>fígado</td><td>array</td><td class="r">3</td><td class="r">4</td><td>replicação do fígado</td></tr>
+      <tr class="sens"><td>GSE21340</td><td>músculo</td><td>array</td><td class="r">3</td><td class="r">5</td><td>sensibilidade: lote confundido</td></tr>
+      <tr class="sens"><td>GSE189005</td><td>sangue</td><td>array</td><td class="r">5</td><td class="r">5</td><td>sensibilidade: lote confundido</td></tr>
+      <tr class="sens"><td>GSE156993</td><td>sangue</td><td>array</td><td class="r">5</td><td class="r">4</td><td>sensibilidade: casos com dislipidemia e periodontite</td></tr>
+    </tbody></table></div>
+  <p>Com esses números, só efeitos grandes são detectáveis. O g mínimo com 80% de poder é de <span class="num">0,9–1,1</span> em p &lt; 0,05 e de cerca de <span class="num">2</span> na escala do genoma. A exceção é o fígado (GSE130991): <span class="num">0,43</span> e <span class="num">0,85</span>. Efeitos típicos do DM2 na expressão de tecidos humanos ficam abaixo do limite dos outros tecidos.</p>
+</section>
+
+<section id="genes">
+  <h2>Genes diferencialmente expressos (DEGs)</h2>
+  <h3>Como foi aplicado</h3>
+  <div class="passos">
+    <div class="passo"><b>1 · Em cada estudo</b><p>Modelo linear (limma; voom para contagens) só com as mulheres de 40–60, DM2 × sem diabetes, com o lote como covariável quando possível.</p></div>
+    <div class="passo"><b>2 · Mesma escala</b><p>O logFC vira g de Hedges (diferença em desvios-padrão), comparável entre arrays e RNA-seq; a variância vem do próprio ajuste do limma.</p></div>
+    <div class="passo"><b>3 · Por tecido</b><p>Meta-análise de efeitos aleatórios (Hartung-Knapp) e FDR. Gene medido em 2+ estudos = replicado; em 1 estudo = descoberta.</p></div>
+  </div>
+  <p>Nenhum gene foi replicado em 2+ estudos com FDR &lt; 0,05. As descobertas de 1 estudo com FDR &lt; 0,05 são o UQCRHL nas ilhotas (só no GSE221156, 2 × 4) e 425 genes no fígado (GSE130991: 258 maiores e 167 menores no DM2). A tabela mostra quantos genes têm p &lt; 0,05 no mesmo sentido em todos os estudos, ao lado do número que o acaso produziria.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Tecido</th><th class="r">Estudos</th><th class="r">Genes analisados</th><th class="r">p &lt; 0,05, mesmo sentido</th><th class="r">Esperado ao acaso</th><th class="r">FDR &lt; 0,05</th><th>Genes mais fortes (g)</th></tr></thead>
+    <tbody>
+      <tr><td class="t-ilhotas">ilhotas</td><td class="r">4</td><td class="r">18.687</td><td class="r">77</td><td class="r">≈ 645</td><td class="r">1*</td><td>MRAS +1,86 · FBLN5 +1,64 · IGFBP6 +2,05 · AHNAK2 +1,45 · THBS2 +1,69</td></tr>
+      <tr><td class="t-adiposo">adiposo</td><td class="r">4</td><td class="r">19.012</td><td class="r">17</td><td class="r">≈ 500</td><td class="r">0</td><td>BTG2 +1,65 · KLF9 +1,60 · PPP1R15A +1,51 · SLC38A2 +1,50 · EGR1 +1,77</td></tr>
+      <tr><td class="t-musculo">músculo</td><td class="r">2</td><td class="r">17.312</td><td class="r">1.637†</td><td class="r">≈ 866</td><td class="r">0</td><td>OXNAD1 −1,79 · GON7 −1,87 · AP2B1 −1,81 · C14orf180 +2,03</td></tr>
+      <tr><td class="t-sangue">sangue</td><td class="r">3</td><td class="r">17.602</td><td class="r">0</td><td class="r">≈ 567</td><td class="r">0</td><td>GBP5 +1,24 · ACADSB −1,16 · FHL1 −1,05 (p ≥ 0,06)</td></tr>
+      <tr><td class="t-figado">fígado</td><td class="r">1</td><td class="r">16.149</td><td class="r">2.235‡</td><td class="r">≈ 807</td><td class="r">425‡</td><td>SATB2 +0,99 · LGALS4 +0,93 · FAT1 +0,91 · WIPI1 +0,91 · ME1 +0,82</td></tr>
+    </tbody></table></div>
+  <p style="font-size:14.5px;color:var(--muted)">* UQCRHL, descoberta de 1 estudo. † Tecidos com 2 estudos: p do efeito fixo, que supõe o mesmo efeito nos dois (o Hartung-Knapp com 1 grau de liberdade não alcança p &lt; 0,05). ‡ Fígado: p e FDR do próprio estudo (descoberta, 146 × 58). O esperado ao acaso é 5% dos genes medidos em todos os estudos do tecido.</p>
+  <p>Ilhotas, adiposo e sangue ficam abaixo do acaso: o sinal de genes isolados é fraco. O músculo fica acima, coerente com o programa mitocondrial. O fígado fica acima, mas parte disso é um deslocamento global de todo o perfil nesse estudo (ver a calibração das vias). No sangue, com o terceiro estudo, nenhum gene tem p &lt; 0,05. No adiposo, os genes mais fortes são de resposta imediata (BTG2, EGR1, KLF9, PPP1R15A), marcados como possível artefato de coleta.</p>
+  <figure><img src="figuras/meta_vulcao.png" alt="Gráficos de vulcão do efeito do DM2 por tecido" width="1800" height="900"><figcaption>Efeito do DM2 (g) × −log10(p) por tecido, nas mulheres de 40–60. Ponto cheio: gene medido em 2 ou mais estudos; vazio: 1 estudo.</figcaption></figure>
+</section>
+
+<section id="wgcna">
+  <h2>Redes de coexpressão (WGCNA)</h2>
+  <h3>Como foi aplicado</h3>
+  <div class="passos">
+    <div class="passo"><b>1 · Construir sem o DM2</b><p>Rede de consenso por tecido com todas as amostras dos estudos com 15+ doadores, sem usar o status de DM2. O lote é retirado antes. Uma ligação entra se for forte em pelo menos 2 estudos.</p></div>
+    <div class="passo"><b>2 · Conferir os módulos</b><p>Módulo = grupo de genes que sobem e descem juntos. Ele precisa se repetir (Zsummary ≥ 2) em pelo menos 2 estudos para ser considerado preservado.</p></div>
+    <div class="passo"><b>3 · Testar o DM2</b><p>O eigengene (perfil-resumo do módulo) é testado como um gene, só nas mulheres de 40–60, com a mesma meta-análise. Os genes-chave têm kME ≥ 0,7 em 2+ estudos.</p></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Tecido</th><th>Estudos de construção</th><th class="r">Potência</th><th class="r">Módulos</th><th class="r">Preservados</th><th>Selecionados (exploratórios)</th><th class="r">Genes-chave</th></tr></thead>
+    <tbody>
+      <tr><td class="t-ilhotas">ilhotas</td><td>GSE41762, GSE221156, GSE76895</td><td class="r">16</td><td class="r">17</td><td class="r">17</td><td>M6 — transição epitélio-mesênquima / TNF-α (188 genes, maior no DM2)</td><td class="r">35</td></tr>
+      <tr><td class="t-musculo">músculo</td><td>GSE18732, GSE25462</td><td class="r">12</td><td class="r">13</td><td class="r">13</td><td>M4 — fosforilação oxidativa (259 genes, menor no DM2); M6 — receptores acoplados à proteína G (243 genes)</td><td class="r">75</td></tr>
+      <tr><td class="t-sangue">sangue</td><td>GSE184050, GSE250283, GSE156993*</td><td class="r">16</td><td class="r">16</td><td class="r">15</td><td>nenhum (melhor p = 0,23)</td><td class="r">0</td></tr>
+      <tr><td class="t-adiposo">adiposo</td><td>GSE200678, GSE133666, GSE198922</td><td class="r">12</td><td class="r">12</td><td class="r">12</td><td>nenhum (melhor p = 0,16)</td><td class="r">0</td></tr>
+      <tr><td class="t-figado">fígado</td><td>GSE130991, GSE15653*</td><td class="r">18</td><td class="r">16</td><td class="r">16</td><td>M6 — retículo, secreção e metabolismo (238 genes) e M15 — secreção de proteínas, retículo–Golgi (54 genes), ambos maiores no DM2; sugestivos (FDR 0,09; 1 estudo)</td><td class="r">58</td></tr>
+    </tbody></table></div>
+  <p style="font-size:14.5px;color:var(--muted)">* O GSE156993 ajuda a construir a rede de sangue e o GSE15653 a do fígado (a rede não usa o status de DM2), mas eles não entram no teste dos módulos. O módulo de interferon do sangue (M45), selecionado quando havia 2 estudos, não existe mais com o terceiro.</p>
+  <figure><img src="figuras/redes_modulos.png" alt="Efeito do DM2 em cada módulo por tecido" width="1800" height="1300"><figcaption>Efeito do DM2 (g e IC 95%) no eigengene de cada módulo, por tecido.</figcaption></figure>
+</section>
+
+<section id="vias">
+  <h2>Vias (GSEA e escore de via)</h2>
+  <h3>Como foi aplicado</h3>
+  <div class="passos">
+    <div class="passo"><b>1 · Coleções</b><p>Hallmark (50 vias), Reactome (1.787) e GO processos biológicos (7.583), do MSigDB.</p></div>
+    <div class="passo"><b>2 · Teste</b><p>Escore competitivo por amostra: a via é comparada com o resto do genoma da mesma amostra. Depois, o mesmo modelo e a mesma meta-análise dos genes. É o teste que vale.</p></div>
+    <div class="passo"><b>3 · GSEA pré-ordenada</b><p>Usada só para o sentido (NES) e para os genes que puxam a via (leading edge). Ela trata genes correlacionados como independentes e fica inflada.</p></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Tecido</th><th class="r">Vias</th><th class="r">FDR &lt; 0,10</th><th class="r">Exploratórias</th><th class="r">p &lt; 0,05 observadas</th><th class="r">Esperado ao acaso</th><th class="r">GSEA FDR &lt; 0,05 (inflada)</th><th class="r">Convergentes com módulo</th></tr></thead>
+    <tbody>
+      <tr><td class="t-ilhotas">ilhotas</td><td class="r">6.910</td><td class="r">0</td><td class="r">64</td><td class="r">78</td><td class="r">346</td><td class="r">894</td><td class="r">6</td></tr>
+      <tr><td class="t-musculo">músculo</td><td class="r">6.864</td><td class="r">0</td><td class="r">261†</td><td class="r">0</td><td class="r">343</td><td class="r">433</td><td class="r">39</td></tr>
+      <tr><td class="t-sangue">sangue</td><td class="r">6.855</td><td class="r">0</td><td class="r">0</td><td class="r">6</td><td class="r">343</td><td class="r">97</td><td class="r">0</td></tr>
+      <tr><td class="t-adiposo">adiposo</td><td class="r">6.915</td><td class="r">0</td><td class="r">4</td><td class="r">14</td><td class="r">346</td><td class="r">151</td><td class="r">0</td></tr>
+      <tr><td class="t-figado">fígado</td><td class="r">6.627</td><td class="r">0</td><td class="r">381‡</td><td class="r">381 (1.087 sem calibrar)</td><td class="r">331</td><td class="r">660</td><td class="r">34</td></tr>
+    </tbody></table></div>
+  <p style="font-size:14.5px;color:var(--muted)">Todas as colunas de p usam o p calibrado contra conjuntos sorteados. † Músculo: nível exploratório pelo efeito fixo (as colunas de p observado usam o Hartung-Knapp, que com 2 estudos quase nunca dá p &lt; 0,05). ‡ Fígado: 1 estudo. Convergente = via enriquecida num módulo selecionado e selecionada no tecido, no mesmo sentido.</p>
+  <ul>
+    <li><span class="t-ilhotas"><strong>Ilhotas</strong></span>: as mais fortes são sinalização WNT (polaridade planar), receptor de HGF e regulação da remodelação óssea, todas maiores no DM2. As 64 exploratórias estão abaixo do acaso; elas valem porque convergem com o módulo M6.</li>
+    <li><span class="t-musculo"><strong>Músculo</strong></span>: é o único tecido com mais vias que o acaso. O eixo é a fosforilação oxidativa e o metabolismo de ácidos graxos, menores no DM2, convergindo com o M4.</li>
+    <li><span class="t-sangue"><strong>Sangue</strong></span>: com o terceiro estudo (GSE250283), nenhuma via fica no mesmo sentido com p &lt; 0,05 nos 3. O sinal de interferon visto com 2 estudos não se repetiu.</li>
+    <li><span class="t-figado"><strong>Fígado</strong></span>: no GSE130991, 15% dos conjuntos de genes sorteados davam p &lt; 0,05 (o esperado é 5%). Com o p calibrado, nenhuma via passa no FDR e restam 381 exploratórias. As mais fortes: homeostase do colesterol, mTORC1, p53 e resposta a proteínas mal dobradas, maiores no DM2.</li>
+  </ul>
+  <figure class="alta"><img src="figuras/gsea_hallmark.png" alt="Mapa das 50 vias Hallmark por tecido" width="1400" height="2300"><figcaption>Vias Hallmark por tecido. Cor = efeito do DM2 pelo escore de via (g; vermelho = maior no DM2, azul = menor); quadro = p &lt; 0,05 (efeito fixo em músculo e sangue; p do estudo no fígado); ** FDR &lt; 0,05, * FDR &lt; 0,10; +/− = sinal do NES da GSEA.</figcaption></figure>
+  <p class="nota"><strong>Calibração das vias (versão 5).</strong> Em dois estudos (GSE130991 e GSE221156), conjuntos de genes sorteados davam p &lt; 0,05 em 15–19% das vezes, porque o DM2 desloca o perfil inteiro da amostra. O p de cada via agora é comparado com 2.000 conjuntos sorteados do mesmo tamanho, e vale o mais conservador. Nos outros tecidos a calibração quase não muda nada.</p>
+  <p class="nota"><strong>Correção da versão 4.</strong> A primeira versão do mapa coloria cada célula pelo NES da GSEA pré-ordenada. O NES nunca fica perto de 0, por construção: conjuntos de genes sorteados ao acaso dão NES em torno de ±0,8. Por isso o mapa parecia todo colorido e homogêneo, sem distinguir as vias com e sem efeito. Agora a cor é o efeito pelo escore de via, que é o teste usado no workflow e fica perto de 0 quando não há efeito. O mapa passa a mostrar os programas: fosforilação oxidativa e ácidos graxos menores no músculo, EMT e TNF-α maiores nas ilhotas, colesterol e mTORC1 maiores no fígado.</p>
+</section>
+
+
+<section id="selecao">
+  <h2>Como os genes foram selecionados</h2>
+  <p>Nenhum gene passou isolado no FDR. Por isso o painel não é uma lista dos genes mais significativos: ele é montado em funil, e cada filtro pede um tipo diferente de evidência. Os números abaixo são gene × tecido.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Passo</th><th>O que entra</th><th class="r">Ilhotas</th><th class="r">Músculo</th><th class="r">Sangue</th><th class="r">Adiposo</th><th class="r">Fígado</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Genes medidos</td><td>Genes codificantes de proteína medidos no tecido</td><td class="r">18.687</td><td class="r">17.312</td><td class="r">17.602</td><td class="r">19.012</td><td class="r">16.149</td></tr>
+      <tr><td>2 · Candidatos</td><td>Genes-chave de módulo selecionado ou genes que puxam uma via selecionada</td><td class="r">493</td><td class="r">1.587</td><td class="r">0</td><td class="r">58</td><td class="r">1.772</td></tr>
+      <tr><td>3 · Painel</td><td>Candidatos com pelo menos 3 dos 5 pontos</td><td class="r">15</td><td class="r">106</td><td class="r">0</td><td class="r">0</td><td class="r">20</td></tr>
+      <tr><td>4 · Programas</td><td>Painel agrupado pelo módulo; até 10 destaques por kME</td><td class="r">M6</td><td class="r">M4</td><td class="r">–</td><td class="r">–</td><td class="r">M6, M15</td></tr>
+    </tbody></table></div>
+
+  <h3>Passo 2 · De onde vêm os candidatos</h3>
+  <ul>
+    <li><strong>Genes-chave de módulo.</strong> O gene pertence a um módulo selecionado na etapa 06 e é central nele: kME ≥ 0,7, ou seja, acompanha o perfil do módulo, em pelo menos 2 estudos de construção. Além disso, o efeito do DM2 no gene tem o mesmo sentido do módulo em todos os estudos. São 168 candidatos.</li>
+    <li><strong>Genes que puxam uma via.</strong> O gene está no "leading edge" da GSEA de uma via selecionada no tecido pelo escore. O leading edge só é usado quando o NES tem o mesmo sinal do efeito do escore; se apontar para o lado oposto, os genes puxariam a via no sentido errado. Vias fortes ou convergentes (enriquecidas num módulo selecionado e selecionadas no tecido) dão ponto a 681 candidatos; as demais vias exploratórias geram candidatos sem dar ponto.</li>
+    <li>Um gene isolado com p pequeno, sem módulo nem via, não vira candidato. A ideia é exigir que o sinal faça parte de um programa.</li>
+  </ul>
+
+  <h3>Passo 3 · A pontuação (1 ponto por critério; painel = 3 ou mais)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Critério</th><th>Regra</th><th>Por que</th></tr></thead>
+    <tbody>
+      <tr><td>Efeito consistente</td><td>2+ estudos, todos no mesmo sentido e p &lt; 0,05 na meta-análise (Hartung-Knapp; efeito fixo em tecidos com 2 estudos)</td><td>O gene muda nas mulheres de estudos diferentes</td></tr>
+      <tr><td>Gene-chave</td><td>Central num módulo selecionado (passo 2)</td><td>O gene faz parte de um programa de coexpressão</td></tr>
+      <tr><td>Via forte ou convergente</td><td>No leading edge de via com FDR &lt; 0,10 ou convergente com o módulo</td><td>Vias só exploratórias geram candidatos, mas não dão ponto</td></tr>
+      <tr><td>Ligação com outro tecido</td><td>Interação no STRING (confiança ≥ 700) ou par ligante–receptor (OmniPath) com candidato de outro tecido que tenha 2+ estudos</td><td>Possível comunicação entre órgãos (conhecimento prévio)</td></tr>
+      <tr><td>Robusto</td><td>Ao tirar cada estudo, o sentido se mantém e o p continua &lt; 0,10 (só com 3+ estudos)</td><td>O resultado não depende de um único estudo</td></tr>
+    </tbody></table></div>
+  <p>Os critérios não são independentes. Um gene central de um módulo selecionado costuma ganhar juntos os pontos de efeito, gene-chave e via, e proteínas de complexos (mitocôndria, interferon) têm muitas ligações no STRING. Por isso o painel é apresentado por <strong>programa</strong> (passo 4), e não como uma lista de genes independentes.</p>
+  <ul>
+    <li><span class="t-adiposo"><strong>Adiposo</strong></span>: nenhum módulo selecionado e só 4 vias exploratórias. Os 58 candidatos ficam com no máximo 2 pontos.</li>
+    <li><span class="t-sangue"><strong>Sangue</strong></span>: com 3 estudos, nenhum módulo nem via foi selecionado; não há candidatos.</li>
+    <li><span class="t-figado"><strong>Fígado</strong></span>: 1 estudo, sem os pontos de robustez; os 20 genes do painel vêm dos módulos M6 e M15 (gene-chave, efeito e via) e são descoberta, não replicação.</li>
+  </ul>
+
+  <h3>Passo 4 · Programas e destaques</h3>
+  <p>Cada gene do painel vai para o módulo selecionado do seu tecido: M6 nas ilhotas, M4 no músculo, M6 e M15 no fígado. Genes de vias que não pertencem a um módulo selecionado formam um grupo complementar do tecido. Os destaques são os até 10 genes de maior kME de cada programa, os mais centrais.</p>
+
+  <h3>Na curva ROC</h3>
+  <p>Na ROC, a escolha é refeita sem o estudo testado, por uma regra fixa:</p>
+  <ul>
+    <li><strong>Regra padrão:</strong> módulo de menor p no treino; os genes do módulo com p &lt; 0,05 e mesmo sentido em todos os estudos de treino (10 a 50 genes).</li>
+    <li><strong>Regra otimizada:</strong> a melhor entre 8 regras, escolhida dentro do treino.</li>
+    <li><strong>Conjunto comum:</strong> genes do genoma, escolhidos com os outros tecidos.</li>
+  </ul>
+  <p>O painel inteiro só pode ser avaliado de forma honesta nos tecidos que não ajudaram a escolhê-lo.</p>
+</section>
+
+<section id="programas">
+  <h2>Programas exploratórios</h2>
+  <p>Sem genes isolados significativos, os resultados vêm da convergência de sinais fracos. Os candidatos são módulos de coexpressão com efeito no mesmo sentido em todos os estudos, apoiados pelos seus genes-chave e pelas vias que puxam no mesmo sentido.</p>
+  <figure class="grafico" aria-label="Efeito do DM2 nos módulos selecionados">
+    <svg id="forest" viewBox="0 0 840 296" role="img" aria-labelledby="forest-t"><title id="forest-t">Efeito do DM2 (g) e IC 95% nos módulos selecionados</title></svg>
+    <figcaption>Efeito do DM2 no eigengene de cada módulo selecionado (g e IC 95% do Hartung-Knapp; no fígado, do próprio estudo). Com 2 estudos, o intervalo do Hartung-Knapp é muito largo; o nível exploratório desses tecidos usa o efeito fixo (p à direita). Os módulos do fígado têm efeito menor, mas medido em 204 mulheres.</figcaption>
+  </figure>
+  <h3>Adiposo</h3>
+  <ul>
+    <li><span class="t-adiposo"><strong>Adiposo</strong></span>: nenhum programa. Os genes mais consistentes entre os 4 estudos são de resposta imediata (BTG2, EGR1, KLF9, PPP1R15A): <span class="num">13%</span> deles têm p &lt; 0,05, contra <span class="num">0,3%</span> dos demais genes. O padrão sugere diferença no tempo de coleta entre casos e controles.</li>
+  </ul>
+</section>
+
+
+<section id="figado">
+  <h2>Fígado em dois níveis</h2>
+  <p>Por decisão da pesquisadora, o GSE130991 (146 × 58 mulheres) é a descoberta do fígado e o GSE15653 (3 × 4) é a replicação. O estudo pequeno não entra na meta-análise, para não vetar o grande com um N 30 vezes menor.</p>
+  <div class="passos">
+    <div class="passo"><b>Descoberta</b><p>Módulos M6 e M15 maiores no DM2 (g = 0,42 e 0,39; FDR 0,09). 425 genes com FDR &lt; 0,05. Nenhuma via no FDR depois da calibração.</p></div>
+    <div class="passo"><b>Medicação</b><p>A via de homeostase do colesterol, a mais forte do fígado (g = 0,69), cai para g = 0,35 com a estatina como covariável. Metade desse sinal é a resposta do fígado ao remédio, mais usado pelas mulheres com DM2.</p></div>
+    <div class="passo"><b>Replicação e ROC</b><p>No GSE15653, 0 de 2 módulos, 17 de 95 vias e 162 de 335 genes no mesmo sentido (acaso = 50%); AUC 0,50. Dentro do GSE130991, a validação cruzada dá AUC 0,64 (0,73 com otimização aninhada).</p></div>
+  </div>
+  <h3>Doença ou remédio?</h3>
+  <p>No GSE130991, 123 das 146 mulheres com DM2 estão em tratamento para diabetes, e 58 usam estatina (contra 4 das 58 sem diabetes). O GEO informa por pessoa se há tratamento para diabetes, sem a classe do remédio, e qual estatina é usada. Isso permite separar os grupos:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Contraste</th><th class="r">Mulheres</th><th class="r">M6 g (p)</th><th class="r">M15 g (p)</th><th class="r">Colesterol g (p)</th></tr></thead>
+    <tbody>
+      <tr><td>DM2 × sem diabetes (principal)</td><td class="r">146 × 58</td><td class="r">0,42 (0,007)</td><td class="r">0,39 (0,011)</td><td class="r">0,69 (0,003)</td></tr>
+      <tr><td>Sem estatina nos dois grupos</td><td class="r">88 × 54</td><td class="r">0,56 (0,001)</td><td class="r">0,44 (0,011)</td><td class="r">0,49 (0,03)</td></tr>
+      <tr><td><strong>DM2 sem tratamento</strong> × sem diabetes</td><td class="r">23 × 58</td><td class="r"><strong>−0,05 (0,85)</strong></td><td class="r">0,14 (0,58)</td><td class="r">−0,02 (0,92)</td></tr>
+      <tr><td>DM2 tratada × DM2 não tratada</td><td class="r">123 × 23</td><td class="r">0,54 (0,017)</td><td class="r">0,31 (0,18)</td><td class="r">0,84 (0,003)</td></tr>
+      <tr><td>… ajustado por estatina, HbA1c, glicemia e IMC</td><td class="r">123 × 23</td><td class="r">0,71 (0,003)</td><td class="r">0,33 (0,17)</td><td class="r">–</td></tr>
+      <tr><td>… só em mulheres sem estatina</td><td class="r">68 × 20</td><td class="r">0,65 (0,011)</td><td class="r">0,42 (0,10)</td><td class="r">–</td></tr>
+    </tbody></table></div>
+  <ul>
+    <li><strong>A estatina não explica os módulos.</strong> Sem ela, o M6 fica até mais forte e os genes mantêm o padrão (correlação 0,94 com o principal). Ela explica parte da via do colesterol.</li>
+    <li><strong>Nas mulheres com DM2 ainda sem tratamento, não há sinal.</strong> O DM2 delas foi definido só por exame. Os módulos e o colesterol não diferem das sem diabetes, e o excesso de genes com p &lt; 0,05 desaparece (4,9%, igual ao acaso).</li>
+    <li><strong>O sinal acompanha o tratamento, não a glicemia.</strong> As tratadas têm M6 maior que as não tratadas, mesmo ajustando por HbA1c, glicemia, IMC e estatina. Dentro dos grupos, o M6 não acompanha a HbA1c (rho ≈ 0).</li>
+  </ul>
+  <p>Leitura: o módulo de retículo e secreção do fígado é, em grande parte, um sinal de <strong>DM2 tratada</strong>, ou de algo ligado ao tratamento, como mais tempo de doença. Não é um sinal da hiperglicemia em si. Metformina e insulina agem diretamente no fígado, mas o GEO não informa qual remédio cada paciente usa nem há quanto tempo tem diabetes. Com só 23 mulheres sem tratamento, um efeito pequeno da doença não pode ser descartado.</p>
+  <p>A replicação falhou, mas é um teste fraco: 3 × 4 mulheres e controles que misturam magras e obesas. Nas vias, a maioria aponta para o lado oposto. O resultado do fígado fica como <strong>descoberta de 1 estudo grande</strong>, com três cuidados: o deslocamento global do perfil (tratado pela calibração), a estatina e o DM2 definido por exames e tratamento, não por diagnóstico registrado.</p>
+</section>
+
+<section id="destino">
+  <h2>O que aconteceu com cada programa</h2>
+  <p>Cinco módulos foram selecionados: ilhotas M6, músculo M4 e M6, e fígado M6 e M15. O M45 do sangue, selecionado quando havia 2 estudos, sumiu com o terceiro. Todos passaram pelas mesmas validações. A validação com célula única só foi possível nas ilhotas, o único tecido com dados de célula única. Só o programa das ilhotas resistiu; o do fígado aguarda replicação.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Programa</th><th>Por que foi selecionado</th><th>Célula única</th><th class="r">Reescolhido sem o estudo testado</th><th class="r">AUC (deixando o estudo de fora)</th><th>Validação externa</th><th>Situação</th></tr></thead>
+    <tbody>
+      <tr><td class="t-ilhotas"><strong>Ilhotas M6</strong><br>estroma ativado</td><td>4 estudos; p = 0,05 pelo teste principal (Hartung-Knapp); mesmo sentido nos 4</td><td>sim: células estreladas; composição e ativação</td><td class="r">3 de 4</td><td class="r">0,69</td><td>sem estudo externo de ilhotas</td><td><span class="status st-ok">mantido</span></td></tr>
+      <tr><td class="t-musculo"><strong>Músculo M4</strong><br>mitocôndria</td><td>2 estudos; p = 0,004 pelo efeito fixo, mas 0,21 pelo teste principal</td><td>não há dados de músculo</td><td class="r">0 de 2</td><td class="r">0,44</td><td>GSE21340: 0,53</td><td><span class="status st-caiu">não reproduzido</span></td></tr>
+      <tr><td class="t-musculo"><strong>Músculo M6</strong><br>receptores acoplados à proteína G</td><td>2 estudos; p = 0,046 pelo efeito fixo, no limite; 0,30 pelo teste principal</td><td>não há dados de músculo</td><td class="r">0 de 2</td><td class="r">–</td><td>–</td><td><span class="status st-caiu">descartado</span></td></tr>
+      <tr><td class="t-sangue"><strong>Sangue M45</strong><br>interferon</td><td>selecionado com 2 estudos (efeito fixo, p = 0,004)</td><td>não há dados de sangue</td><td class="r">0 de 3</td><td class="r">0,38</td><td>GSE156993: 0,90 (0,70 com a rede sem ele); GSE189005: 0,28</td><td><span class="status st-caiu">desapareceu com o 3º estudo</span></td></tr>
+      <tr><td class="t-figado"><strong>Fígado M6 e M15</strong><br>retículo e secreção</td><td>1 estudo grande (146 × 58); FDR 0,09 (sugestivo)</td><td>não há dados de fígado</td><td class="r">M6 ou M15 em 50 de 50 rodadas da validação cruzada</td><td class="r">0,64 (validação cruzada; 0,73 otimizada)</td><td>GSE15653: 0,50; módulos 0 de 2 no mesmo sentido</td><td><span class="status st-caiu">não replicado</span></td></tr>
+    </tbody></table></div>
+  <h3>Remédios nos outros estudos</h3>
+  <p>Só dois estudos informam remédios por pessoa: o GSE130991 (fígado) e o GSE18732 (músculo: metformina e estatina). No músculo, o efeito agudo do remédio é pequeno nos dois estudos. No GSE18732, as pessoas com DM2 ficaram uma semana sem o antidiabético antes da biópsia; no GSE25462, não usavam remédio para diabetes. Nos estudos de ilhotas, adiposo e sangue, os artigos não informam remédios por pessoa: são desconhecidos.</p>
+
+  <h3>Por que músculo e sangue caíram</h3>
+  <p>No sangue, o motivo é direto: com o terceiro estudo (GSE250283, 4 × 8), o módulo de interferon deixou de existir na rede de consenso, nenhum módulo foi selecionado e a AUC deixando um estudo de fora ficou em 0,38. Os pontos abaixo valem para o músculo e para o sangue com 2 estudos (versão 4).</p>
+  <ul>
+    <li><strong>A seleção dependia do efeito fixo.</strong> Com só 2 estudos, o teste principal não alcança p &lt; 0,05. Esses programas entraram pelo efeito fixo, que supõe o mesmo efeito do DM2 nos dois estudos. Pelo teste principal, o p deles é 0,21, e os genes do painel ficam entre 0,15 e 0,45.</li>
+    <li><strong>Um estudo não reencontra o programa do outro.</strong> Na curva ROC, com um estudo para escolher e o outro para testar, o M4 do músculo nunca foi reescolhido; cada rodada achou um módulo diferente (M3 e M9). O M45 do sangue foi reescolhido em uma das duas rodadas. Um programa robusto deveria aparecer nos dois estudos de forma independente.</li>
+    <li><strong>Eles não separam DM2 de sem diabetes em pessoas novas.</strong> A AUC ficou no acaso: 0,44 no músculo e 0,47 no maior estudo de sangue (9 × 19). A validação externa não ajudou: os estudos disponíveis têm lote confundido ou comorbidades não pareadas.</li>
+    <li><strong>O M6 do músculo era fraco desde o início.</strong> O p de 0,046 pelo efeito fixo está no limite, e só 1 gene dele (HNF4A) chegou ao painel. Ele não foi levado adiante.</li>
+  </ul>
+  <p>A biologia continua plausível. A queda da fosforilação oxidativa e do PGC-1α no músculo é um achado clássico do DM2 (Mootha et al., 2003; Patti et al., 2003). A resposta a interferon no sangue é compatível com inflamação crônica. Esses programas ficam registrados como <strong>hipóteses coerentes com a literatura, não reproduzidas com estes dados</strong>, e pedem replicação em coortes maiores de mulheres de 40–60. A partir daqui, o relatório segue só com o programa das ilhotas.</p>
+</section>
+
+<section id="celula">
+  <h2>Validação com célula única nas ilhotas</h2>
+  <p>Esta validação vale só para as ilhotas: GSE221156 e GSE86469 são os únicos estudos de célula única do workflow, e ambos são de ilhotas. A pergunta é se o programa estromal é expressão alterada dentro das células ou mais células estromais na amostra.</p>
+  <p>No GSE221156 (cerca de 245 mil células), 12 dos 15 genes do programa estromal são expressos sobretudo pelas <strong>células estreladas</strong>. Nelas está 98% da expressão de THBS2 e 93% da de IL6 e APOD.</p>
+  <p>A deconvolução reproduziu a composição verdadeira (correlação de 0,74 para estreladas e 0,89 para beta). Nos 4 estudos de ilhotas, ela indicou mais estreladas (g = <span class="num">0,64</span>) e menos células beta (g = <span class="num">−1,70</span>) nas mulheres com DM2. O sentido se repetiu nos 4 estudos, sem significância.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Módulo ou gene</th><th class="r">g sem ajuste</th><th class="r">g com ajuste</th><th class="r">Redução</th></tr></thead>
+    <tbody>
+      <tr><td>Módulo M6</td><td class="r">1,05</td><td class="r">0,71</td><td class="r">33%</td></tr>
+      <tr><td>PCOLCE</td><td class="r">1,00</td><td class="r">0,53</td><td class="r">47%</td></tr>
+      <tr><td>ZEB2</td><td class="r">0,84</td><td class="r">0,48</td><td class="r">43%</td></tr>
+      <tr><td>THBS2</td><td class="r">1,46</td><td class="r">0,97</td><td class="r">34%</td></tr>
+      <tr><td>SLIT2</td><td class="r">1,18</td><td class="r">0,79</td><td class="r">33%</td></tr>
+      <tr><td>LTBP1</td><td class="r">1,03</td><td class="r">0,74</td><td class="r">28%</td></tr>
+      <tr><td>HGF</td><td class="r">0,85</td><td class="r">0,62</td><td class="r">27%</td></tr>
+      <tr><td>PEA15</td><td class="r">1,08</td><td class="r">0,98</td><td class="r">9%</td></tr>
+      <tr><td>IL6</td><td class="r">1,56</td><td class="r">1,50</td><td class="r">4%</td></tr>
+      <tr><td>APOD</td><td class="r">1,29</td><td class="r">1,24</td><td class="r">4%</td></tr>
+    </tbody></table></div>
+  <p>Ajustar pela proporção de estreladas reduz o efeito da maioria dos genes em 25–45%. IL6, APOD e PEA15 quase não mudam. Dentro das próprias estreladas, LTBP1, PEA15, APOD, RAB34, THBS2 e IL6 aparecem maiores no DM2 (descritivo, 2 × 4 mulheres). Conclusão: <strong>parte do sinal é composição e parte é ativação</strong>.</p>
+  <figure><img src="figuras/validacao_deconvolucao.png" alt="Deconvolução testada no GSE221156 e proporção de células estreladas por estudo" width="1800" height="900"><figcaption>Esquerda: composição estimada × verdadeira no GSE221156. Direita: proporção estimada de células estreladas, DM2 × sem diabetes, nas mulheres de 40–60 de cada estudo de ilhotas.</figcaption></figure>
+</section>
+
+<section id="roc">
+  <h2>Os programas separam DM2 de sem diabetes em pessoas novas?</h2>
+  <p>Em cada rodada, um estudo é escondido. O módulo e os genes são escolhidos só com os outros, e um escore de sentido fixo é avaliado no estudo escondido. AUC 0,5 é o acaso e 1 é a separação perfeita.</p>
+  <p>O fígado tem um só estudo principal, o GSE130991, então não dá para esconder um estudo. Nele, as 204 mulheres foram divididas em 5 partes, mantendo a proporção de DM2 em cada uma. Em cada rodada, o modelo da etapa 05 é refeito com 4 partes, o módulo e os genes são escolhidos pela mesma regra e o escore é avaliado na parte escondida. O sorteio das partes foi repetido 10 vezes. Essa validação cruzada é mais otimista que um estudo novo, porque as partes vêm do mesmo laboratório e da mesma plataforma.</p>
+  <figure class="grafico" aria-label="AUC por estudo testado">
+    <svg id="aucs" viewBox="0 0 760 405" role="img" aria-labelledby="aucs-t"><title id="aucs-t">AUC de cada estudo testado deixando-o de fora, com IC 95%</title></svg>
+    <figcaption>AUC de cada estudo testado (círculo) e IC 95%; no fígado, o círculo é a validação cruzada dentro do GSE130991 (mediana de 10 repetições). Quadrado vazado = estudo externo. A linha tracejada marca o acaso. Com 2 × 2 mulheres, uma AUC de 1 acontece por acaso em 1 de cada 6 vezes.</figcaption>
+  </figure>
+  <ul>
+    <li><span class="t-ilhotas"><strong>Ilhotas</strong></span>: o M6 foi reescolhido em 3 das 4 rodadas, com AUC combinada de <span class="num">0,69</span> (IC 0,29 a 0,92; p = 0,23). Aponta na direção certa, sem significância.</li>
+    <li><span class="t-musculo"><strong>Músculo</strong></span>: cada rodada escolheu um módulo diferente, e a AUC ficou no acaso (<span class="num">0,44</span>).</li>
+    <li><span class="t-sangue"><strong>Sangue</strong></span>: com 3 estudos, cada rodada escolheu um módulo diferente e nenhum era o M45; AUC combinada <span class="num">0,38</span>. A validação externa foi inconclusiva (0,90 e 0,28; o GSE156993 cai para 0,70 com a rede feita sem ele).</li>
+    <li><span class="t-figado"><strong>Fígado</strong></span>: na validação cruzada do GSE130991, a AUC mediana foi <span class="num">0,64</span> (IC 0,55 a 0,72; p = 0,001), entre 0,60 e 0,66 nas 10 repetições. O módulo escolhido no treino foi sempre um dos dois da etapa 06 (M6 em 28 de 50 rodadas; M15 nas demais). O ganho sobre o acaso é modesto: conjuntos de genes sorteados já dão <span class="num">0,57</span> nesse estudo (p95 = 0,64), porque o DM2 desloca o perfil inteiro. Contra os sorteios, p = 0,025. No GSE15653 (3 × 4), os genes escolhidos no GSE130991 deram AUC <span class="num">0,50</span>.</li>
+  </ul>
+  <figure><img src="figuras/roc_programas.png" alt="Curvas ROC por tecido" width="2100" height="760"><figcaption>Curvas ROC por tecido. Linha cheia: estudo testado deixando-o de fora (no fígado, validação cruzada dentro do GSE130991, 1ª repetição); tracejada: estudo externo.</figcaption></figure>
+
+  <h3>A rede ajudou o teste?</h3>
+  <p>Os módulos vêm da rede de coexpressão da etapa 06, construída uma vez com todos os estudos de construção, inclusive o estudo testado em cada rodada. No sangue e no fígado, entram também os estudos externos GSE156993 e GSE15653. A rede não usa o status de DM2, então não há vazamento do rótulo. Mesmo assim, o estudo testado ajudou a decidir quais módulos existem: a avaliação acima é <strong>condicionada a essa rede</strong>, não uma validação totalmente independente. Para conferir, a rede foi refeita em cada rodada só com o treino (etapa 10d).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Tecido</th><th class="r">AUC, rede única</th><th class="r">AUC, rede refeita em cada rodada</th><th>Módulo da rodada parecido com o selecionado</th></tr></thead>
+    <tbody>
+      <tr><td class="t-ilhotas">ilhotas (deixar um estudo de fora)</td><td class="r">0,69</td><td class="r">0,70 (0,30 a 0,93)</td><td>3 de 4 rodadas (Jaccard 0,34 a 1 com o M6)</td></tr>
+      <tr><td class="t-musculo">músculo</td><td class="r">0,44</td><td class="r">0,54</td><td>0 de 2 (rede de 1 estudo)</td></tr>
+      <tr><td class="t-sangue">sangue</td><td class="r">0,38</td><td class="r">0,39</td><td>– (nenhum módulo selecionado)</td></tr>
+      <tr><td class="t-sangue">sangue, externo GSE156993</td><td class="r">0,90</td><td class="r">0,70</td><td>rede sem o GSE156993</td></tr>
+      <tr><td class="t-figado">fígado, validação cruzada (mesma divisão)</td><td class="r">0,66</td><td class="r">0,69</td><td>módulos diferentes: a rede passa a ser de 1 estudo</td></tr>
+      <tr><td class="t-figado">fígado, externo GSE15653</td><td class="r">0,50</td><td class="r">0,33</td><td>rede sem o GSE15653</td></tr>
+    </tbody></table></div>
+  <p>As conclusões se mantêm. O programa das ilhotas reaparece sem o estudo testado na rede, com a mesma AUC. A exceção é o GSE156993: os 0,90 da validação externa do sangue estavam inflados pela participação dele na rede e caem para 0,70.</p>
+
+  <h3>Otimizar o conjunto de genes melhora a curva?</h3>
+  <p>Escolher o conjunto pela maior AUC nas mesmas mulheres em que ela é medida dá uma AUC alta quase garantida. Por isso a otimização foi <strong>aninhada</strong>. Foram comparadas 8 regras: genes do módulo ou do genoma inteiro, com 10, 20, 50 ou 100 genes. A melhor regra foi escolhida deixando um estudo de fora <em>dentro</em> do treino, e só então testada no estudo escondido. Para procurar um conjunto comum a todos os tecidos, um tecido inteiro foi escondido de cada vez.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Conjunto (ilhotas)</th><th class="r">AUC combinada</th><th class="r">IC 95%</th><th class="r">p</th><th>Estimativa honesta?</th></tr></thead>
+    <tbody>
+      <tr><td>Regra padrão: módulo, 20 genes</td><td class="r">0,69</td><td class="r">0,29 a 0,92</td><td class="r">0,23</td><td>sim</td></tr>
+      <tr><td>Regra otimizada dentro do treino</td><td class="r">0,65</td><td class="r">0,28 a 0,90</td><td class="r">0,30</td><td>sim</td></tr>
+      <tr><td>Conjunto comum a todos os tecidos (tecido de fora)</td><td class="r">0,46</td><td class="r">0,16 a 0,79</td><td class="r">0,72</td><td>sim</td></tr>
+      <tr><td>Genes do painel, deixando o estudo de fora</td><td class="r">0,78</td><td class="r">0,38 a 0,96</td><td class="r">0,11</td><td>parcial*</td></tr>
+      <tr><td>Painel inteiro nos mesmos estudos</td><td class="r">0,73</td><td class="r">0,33 a 0,94</td><td class="r">0,16</td><td>não (circular)</td></tr>
+    </tbody></table></div>
+  <p>No fígado, a otimização aninhada foi feita dentro do GSE130991. Em cada parte externa, a regra foi escolhida por uma validação cruzada interna feita só com as outras 4 partes, e só então testada na parte escondida.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Conjunto (fígado, GSE130991)</th><th class="r">AUC (mediana de 10 repetições)</th><th class="r">IC 95%</th><th class="r">Mín.–máx.</th><th>Estimativa honesta?</th></tr></thead>
+    <tbody>
+      <tr><td>Regra padrão: módulo, genes com p &lt; 0,05</td><td class="r">0,64</td><td class="r">0,55 a 0,72</td><td class="r">0,60–0,66</td><td>sim (mesmo estudo)</td></tr>
+      <tr><td>Regra otimizada dentro do treino</td><td class="r">0,73</td><td class="r">0,65 a 0,80</td><td class="r">0,69–0,75</td><td>sim (mesmo estudo)</td></tr>
+      <tr><td>Genes do GSE130991 no GSE15653 (externo)</td><td class="r">0,50</td><td class="r">0,00 a 1,00</td><td class="r">–</td><td>sim (3 × 4)</td></tr>
+    </tbody></table></div>
+  <p style="font-size:14.5px;color:var(--muted)">* Em cada rodada só entram os genes do painel que passam nos outros 3 estudos, mas os 15 genes do painel foram escolhidos na etapa 08 olhando os 4 estudos. Parte da informação do estudo testado já está na lista.</p>
+  <ul>
+    <li><strong>Nas ilhotas, otimizar não ajudou.</strong> A regra escolhida no treino variou entre as rodadas e não superou a regra padrão (0,65 contra 0,69).</li>
+    <li><strong>No fígado, otimizar ajudou.</strong> A regra vencedora quase sempre usa 50 a 100 genes do genoma inteiro, não só do módulo, e sobe a AUC de 0,64 para 0,73. Parte desse ganho pode vir do deslocamento global do perfil no GSE130991, que genes do genoma inteiro captam melhor. O conjunto final tem 100 genes (SATB2, LGALS4, FAT1, ME1, MVK, SQLE, ACLY…); vários são de síntese de colesterol e lipídios, que a estatina também altera. Sem um segundo estudo grande, não dá para saber se essa separação vale em outra coorte.</li>
+    <li><strong>O conjunto comum depende do fígado.</strong> Escolhido com os outros tecidos e testado no tecido escondido, ele teve AUC combinada <span class="num">0,63</span> (IC 0,56 a 0,70; p = 0,002) nos 14 estudos. O peso vem do GSE130991, com 204 mulheres: <span class="num">0,66</span> no fígado (p &lt; 0,001), <span class="num">0,73</span> no adiposo e <span class="num">0,46</span> nas ilhotas, os dois últimos sem significância. Separação pequena, longe de servir como classificador.</li>
+  </ul>
+  <figure><img src="figuras/roc_otimizada.png" alt="AUC padrão versus otimizada e conjunto comum" width="1700" height="820"><figcaption>Esquerda: AUC de cada estudo testado com a regra padrão × a regra otimizada no treino (diagonal = igual). Direita: conjunto comum a todos os tecidos, deixando um tecido inteiro de fora, com IC 95%.</figcaption></figure>
+
+  <h3>O painel das ilhotas, gene a gene e em outros tecidos</h3>
+  <p>Nas ilhotas, cada gene do painel separa os grupos com AUC média de 0,7 a 0,9, mas isso é otimista: foi lá que eles foram escolhidos. O teste independente é aplicar o painel aos outros tecidos, onde ele não ajudou a escolher nada. Lá ele não separa DM2 de sem diabetes, com uma exceção pequena no fígado:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Tecido (teste independente)</th><th class="r">Estudos</th><th class="r">AUC combinada</th><th class="r">IC 95%</th><th class="r">p</th></tr></thead>
+    <tbody>
+      <tr><td class="t-adiposo">adiposo</td><td class="r">4</td><td class="r">0,65</td><td class="r">0,24 a 0,91</td><td class="r">0,36</td></tr>
+      <tr><td class="t-musculo">músculo</td><td class="r">2</td><td class="r">0,65</td><td class="r">0,00 a 1,00</td><td class="r">0,80</td></tr>
+      <tr><td class="t-sangue">sangue</td><td class="r">3</td><td class="r">0,42</td><td class="r">0,12 a 0,79</td><td class="r">0,48</td></tr>
+      <tr><td class="t-figado">fígado</td><td class="r">1</td><td class="r">0,66</td><td class="r">0,58 a 0,73</td><td class="r">0,0004</td></tr>
+    </tbody></table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Gene</th><th class="r">AUC média nas ilhotas</th><th class="r">Ilhotas com AUC &gt; 0,5</th><th class="r">AUC média nos outros tecidos</th><th class="r">Outros estudos com AUC &gt; 0,5</th></tr></thead>
+    <tbody>
+      <tr><td>ADAMTS3</td><td class="r">0,89</td><td class="r">3/3</td><td class="r">0,48</td><td class="r">4/10</td></tr>
+      <tr><td>PCOLCE</td><td class="r">0,88</td><td class="r">4/4</td><td class="r">0,57</td><td class="r">6/10</td></tr>
+      <tr><td>IGFBP4</td><td class="r">0,86</td><td class="r">4/4</td><td class="r">0,50</td><td class="r">5/10</td></tr>
+      <tr><td>LTBP1</td><td class="r">0,86</td><td class="r">4/4</td><td class="r">0,46</td><td class="r">3/10</td></tr>
+      <tr><td>PEA15</td><td class="r">0,85</td><td class="r">4/4</td><td class="r">0,52</td><td class="r">6/10</td></tr>
+      <tr><td>RAB34</td><td class="r">0,85</td><td class="r">4/4</td><td class="r">0,43</td><td class="r">2/9</td></tr>
+      <tr><td>IL6</td><td class="r">0,83</td><td class="r">4/4</td><td class="r">0,57</td><td class="r">5/10</td></tr>
+      <tr><td>TGFB3</td><td class="r">0,83</td><td class="r">4/4</td><td class="r">0,58</td><td class="r">6/10</td></tr>
+      <tr><td>HGF</td><td class="r">0,82</td><td class="r">4/4</td><td class="r">0,59</td><td class="r">7/10</td></tr>
+      <tr><td>THBS2</td><td class="r">0,81</td><td class="r">4/4</td><td class="r">0,57</td><td class="r">5/10</td></tr>
+      <tr><td>APOD</td><td class="r">0,80</td><td class="r">3/4</td><td class="r">0,54</td><td class="r">5/10</td></tr>
+      <tr><td>SH2B3</td><td class="r">0,80</td><td class="r">4/4</td><td class="r">0,54</td><td class="r">5/9</td></tr>
+      <tr><td>SLC16A1</td><td class="r">0,74</td><td class="r">3/4</td><td class="r">0,40</td><td class="r">1/10</td></tr>
+      <tr><td>SLIT2</td><td class="r">0,71</td><td class="r">3/4</td><td class="r">0,50</td><td class="r">4/10</td></tr>
+      <tr><td>ZEB2</td><td class="r">0,68</td><td class="r">3/4</td><td class="r">0,54</td><td class="r">5/8</td></tr>
+    </tbody></table></div>
+  <figure><img src="figuras/painel_roc_genes.png" alt="AUC de cada gene do painel em cada estudo" width="1900" height="1050"><figcaption>AUC de cada gene do painel das ilhotas em cada estudo, com sentido fixo (maior no DM2). À esquerda da linha, ilhotas, onde os genes foram escolhidos; à direita, os outros tecidos. Vermelho = acima de 0,5; azul = abaixo.</figcaption></figure>
+  <p>O painel é um retrato <strong>das ilhotas</strong>: consistente entre os estudos de ilhotas e sem poder de separação no adiposo, no músculo e no sangue. A exceção é o fígado, com AUC de 0,66 em 204 mulheres: pequena, mas significativa. HGF, TGFB3, PCOLCE, IL6 e THBS2 têm algum sinal fora das ilhotas, compatível com inflamação e remodelação de matriz, que no fígado do DM2 acompanham a esteatose e a fibrose.</p>
+</section>
+
+<section id="sanidade">
+  <h2>Qualidade</h2>
+  <p>São <span class="num">1.449</span> verificações automáticas: <span class="num">1.442</span> OK, <span class="num">7</span> alertas e nenhum erro. Elas mostram que:</p>
+  <ul>
+    <li>os modelos não estão inflados: com rótulos permutados, cerca de 5% dos genes dão p &lt; 0,05;</li>
+    <li>a meta-análise coincide com o pacote de referência metafor;</li>
+    <li>o sexo e o tecido conferem pela expressão;</li>
+    <li>o status de cada amostra processada é igual ao da curadoria (verificação nova: o GSE130991 tinha ficado com a classificação antiga e foi reprocessado).</li>
+  </ul>
+  <h3>Sexo declarado × sexo pela expressão</h3>
+  <p>16 amostras em 6 estudos têm sexo declarado diferente do que a expressão mostra (XIST, alto em mulheres, e genes do cromossomo Y). Foram retiradas da análise. Em 13 a troca é clara; em 3 o padrão é ambíguo (GSM3758586, GSM3758442, GSM624955).</p>
+  <figure><img src="figuras/sexo_discordantes.png" alt="XIST versus genes do cromossomo Y em cada estudo com amostras de sexo discordante" width="1900" height="1400"><figcaption>Cada painel é um estudo: XIST × média dos genes do Y (z dentro do estudo). Cor = sexo declarado; contorno preto = discordante; × = discordante declarada mulher de 40–60.</figcaption></figure>
+  <p>Os alertas não são erros, mas pedem cautela:</p>
+  <ul>
+    <li><strong>Mais genes com p &lt; 0,05 do que o esperado</strong> em GSE130991, GSE221156, GSE18732 e GSE189005. Nos dois primeiros, o DM2 desloca o perfil inteiro do estudo; nas vias isso foi tratado pela calibração contra conjuntos sorteados, e nos genes isolados entra na interpretação. O GSE18732 tem lote como covariável. O GSE189005 está só na sensibilidade, por lote confundido.</li>
+    <li><strong>Confusores desbalanceados</strong> entre DM2 e controles (idade, IMC, composição celular) e <strong>comparabilidade</strong> entre estudos: em 4 estudos o perfil mais parecido é de outro tecido; há poucos genes em comum com o GSE21340 (array antigo); de 6% a 12% dos símbolos se perdem em 5 estudos; e 17 amostras do GSE198922 têm poucos genes detectados.</li>
+    <li>Escore de via com viés no GSE221156: 19% dos conjuntos de genes sorteados dão p &lt; 0,05. Por isso o p das vias é calibrado contra os sorteios.</li>
+  </ul>
+  <p>A sanidade cobre também as etapas 10b, 10c e 10d e a validação cruzada do fígado: AUC e IC válidos, cada mulher testada uma vez por repetição, e estudo ou parte testada fora do treino e da construção da rede. A atualização completa para na primeira etapa que falhar.</p>
+</section>
+
+<section id="discussao">
+  <h2>Discussão</h2>
+  <h3>Ilhotas</h3>
+  <p>O programa mais consistente é um estroma ativado, maior no DM2 e próprio das células estreladas. Parte do sinal vem de haver mais estreladas e menos células beta. IL6, APOD e outros genes sobem também dentro das estreladas, o que sugere ativação.</p>
+  <p>Isso conversa com a fibrose da ilhota no DM2, em que estreladas ativadas por hiperglicemia e pelo sistema renina-angiotensina proliferam e depositam matriz, junto com a perda de massa beta (Kim et al., 2008; Yang et al., 2020). Conversa também com módulos inflamatórios associados ao DM2 em ilhotas humanas (Mahdi et al., 2012) e com a assinatura transcricional do biobanco IMIDIA (Solimena et al., 2018).</p>
+  <p>Arrays e célula única discordam no tamanho do efeito. Isso pode refletir diferenças no preparo das ilhotas e a diluição do estroma entre milhares de células endócrinas no pseudo-bulk (Lawlor et al., 2017; Segerstolpe et al., 2016).</p>
+  <h3>Músculo</h3>
+  <p>A queda coordenada da fosforilação oxidativa e do PGC-1α é um dos achados mais clássicos do DM2 em músculo (Mootha et al., 2003; Patti et al., 2003). Reencontrá-la neste recorte dá validade ao fluxo. Mas o programa depende do efeito fixo com 2 estudos e não se reproduziu como classificador.</p>
+  <h3>Sangue</h3>
+  <p>A assinatura de interferon vista com 2 estudos desapareceu com o terceiro. É a marca de um achado frágil, possivelmente ligado a infecção viral recente, vacinação ou autoimunidade, que os estudos não informam.</p>
+  <h3>Fígado</h3>
+  <p>O GSE130991 mostra retículo, secreção de proteínas e metabolismo maiores no DM2, compatível com estresse do retículo e remodelação metabólica do fígado. A leitura tem três cuidados: o deslocamento global do perfil (corrigido pela calibração), a estatina (metade do sinal do colesterol, pela resposta compensatória do fígado) e a falta de replicação no estudo pequeno.</p>
+  <h3>Adiposo</h3>
+  <p>No adiposo, o sinal mais consistente vem de genes que sobem em minutos com a isquemia e o manuseio do tecido antes do congelamento (Dash et al., 2002; van den Brink et al., 2017). Diferenças no tempo de cirurgia entre casos e controles são uma explicação plausível.</p>
+  <h3>A transição menopausal</h3>
+  <p>A faixa de 40–60 anos é um substituto do estado menopausal, que nenhum estudo informa. Os programas encontrados são conhecidos no DM2 em geral. Com o escopo atual, que exclui outras idades e homens, não dá para dizer se são próprios dessa fase ou apenas visíveis nela.</p>
+</section>
+
+<section id="limitacoes">
+  <h2>Limitações</h2>
+  <ul>
+    <li>N pequeno (2 a 19 mulheres por grupo em cada estudo, exceto o GSE130991) e poucos estudos por tecido (1 a 4).</li>
+    <li>Fatores de confusão desbalanceados e nem sempre informados: IMC, idade, comorbidades, composição celular, tempo de coleta e medicação. Só o GSE130991 e o GSE18732 informam remédios por pessoa, e nenhum informa o tempo de diabetes.</li>
+    <li>Estado menopausal não informado.</li>
+    <li>Fígado: descoberta de 1 estudo grande, sem replicação; DM2 definido por exames e tratamento; matriz normalizada pelos autores. Músculo com 2 estudos.</li>
+    <li>GSE130991 e GSE221156 deslocam o perfil inteiro com o DM2; o p das vias foi calibrado para isso.</li>
+    <li>Resgate do GSE250283: 10 amostras de outra plataforma (2 mulheres com DM2) ficaram de fora, e o grupo com doença coronariana foi excluído (sensibilidade pendente).</li>
+    <li>Ligações entre tecidos vêm de conhecimento prévio, e cada tecido vem de pessoas diferentes.</li>
+    <li>A curva ROC principal é condicionada a uma rede construída com todas as coortes (sem o status de DM2). Com a rede refeita a cada rodada, as conclusões se mantêm.</li>
+    <li>Nenhum programa se mostrou um classificador confiável em pessoas novas. No fígado, a AUC de 0,64–0,73 vem de partes do mesmo estudo; sem uma segunda coorte grande, não se sabe se ela se mantém.</li>
+  </ul>
+</section>
+
+<section id="conclusoes">
+  <h2>Conclusões e próximos passos</h2>
+  <ul>
+    <li>Com os dados públicos disponíveis, não há alteração de genes isolados detectável no DM2 em mulheres de 40–60. Os achados são programas exploratórios.</li>
+    <li>O estroma ativado das ilhotas é o candidato mais sólido: reencontrado de forma independente, explicado por composição e ativação de células estreladas, e coerente com a fibrose da ilhota descrita no DM2.</li>
+    <li>No fígado, o módulo de retículo e secreção é, em grande parte, sinal de DM2 tratada: some nas mulheres ainda sem tratamento e não depende da estatina nem da HbA1c. Separar doença de remédio exige coortes com a classe do remédio e o tempo de diabetes por pessoa.</li>
+    <li>Músculo e sangue não se sustentaram: o músculo na validação deixando um estudo de fora, e o sangue com a entrada do terceiro estudo.</li>
+    <li>Próximos passos:
+      <ul>
+        <li>testar o programa estromal em coortes maiores de ilhotas com sexo e idade informados;</li>
+        <li>no fígado, comparar DM2 sem tratamento, em metformina e em insulina numa coorte grande com remédio e tempo de diabetes por pessoa;</li>
+        <li>fazer pseudo-bulk por tipo celular em mais estudos de célula única;</li>
+        <li>incluir o estado menopausal e covariáveis clínicas quando disponíveis;</li>
+        <li>avaliar a especificidade da faixa etária, se o escopo for ampliado.</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<section id="referencias" class="refs">
+  <h2>Referências</h2>
+  <ol>
+    <li>Dash A, et al. Changes in differential gene expression because of warm ischemia time of radical prostatectomy specimens. <em>Am J Pathol.</em> 2002;161(5):1743-8. <a href="https://doi.org/10.1016/S0002-9440(10)64451-3">doi:10.1016/S0002-9440(10)64451-3</a></li>
+    <li>IntHout J, Ioannidis JPA, Borm GF. The Hartung-Knapp-Sidik-Jonkman method for random effects meta-analysis is straightforward and considerably outperforms the standard DerSimonian-Laird method. <em>BMC Med Res Methodol.</em> 2014;14:25. <a href="https://doi.org/10.1186/1471-2288-14-25">doi:10.1186/1471-2288-14-25</a></li>
+    <li>Kim JW, et al. Loss of beta-cells with fibrotic islet destruction in type 2 diabetes mellitus. <em>Front Biosci.</em> 2008;13:6022-33. <a href="https://doi.org/10.2741/3133">doi:10.2741/3133</a></li>
+    <li>Lawlor N, et al. Single-cell transcriptomes identify human islet cell signatures and reveal cell-type-specific expression changes in type 2 diabetes. <em>Genome Res.</em> 2017;27(2):208-222. <a href="https://doi.org/10.1101/gr.212720.116">doi:10.1101/gr.212720.116</a></li>
+    <li>Mahdi T, et al. Secreted frizzled-related protein 4 reduces insulin secretion and is overexpressed in type 2 diabetes. <em>Cell Metab.</em> 2012;16(5):625-33. <a href="https://doi.org/10.1016/j.cmet.2012.10.009">doi:10.1016/j.cmet.2012.10.009</a></li>
+    <li>Mootha VK, et al. PGC-1alpha-responsive genes involved in oxidative phosphorylation are coordinately downregulated in human diabetes. <em>Nat Genet.</em> 2003;34(3):267-73. <a href="https://doi.org/10.1038/ng1180">doi:10.1038/ng1180</a></li>
+    <li>Patti ME, et al. Coordinated reduction of genes of oxidative metabolism in humans with insulin resistance and diabetes: potential role of PGC1 and NRF1. <em>Proc Natl Acad Sci USA.</em> 2003;100(14):8466-71. <a href="https://doi.org/10.1073/pnas.1032913100">doi:10.1073/pnas.1032913100</a></li>
+    <li>Segerstolpe Å, et al. Single-cell transcriptome profiling of human pancreatic islets in health and type 2 diabetes. <em>Cell Metab.</em> 2016;24(4):593-607. <a href="https://doi.org/10.1016/j.cmet.2016.08.020">doi:10.1016/j.cmet.2016.08.020</a></li>
+    <li>Solimena M, et al. Systems biology of the IMIDIA biobank from organ donors and pancreatectomised patients defines a novel transcriptomic signature of islets from individuals with type 2 diabetes. <em>Diabetologia.</em> 2018;61(3):641-657. <a href="https://doi.org/10.1007/s00125-017-4500-3">doi:10.1007/s00125-017-4500-3</a></li>
+    <li>van den Brink SC, et al. Single-cell sequencing reveals dissociation-induced gene expression in tissue subpopulations. <em>Nat Methods.</em> 2017;14(10):935-936. <a href="https://doi.org/10.1038/nmeth.4437">doi:10.1038/nmeth.4437</a></li>
+    <li>Yang Y, et al. Pancreatic stellate cells in the islets as a novel target to preserve the pancreatic β-cell mass and function. <em>J Diabetes Investig.</em> 2020;11(2):268-280. <a href="https://doi.org/10.1111/jdi.13202">doi:10.1111/jdi.13202</a></li>
+  </ol>
+  <p style="font-size:14px;color:var(--muted)">Referências conferidas no PubMed em 09/10/2026.</p>
+</section>
+
+<footer>Workflow dm_menopausa · dados públicos do GEO · números gerados a partir das saídas do workflow em 10/10/2026. Detalhes, pacotes e decisões de cada etapa estão nos documentos Word (docs/etapa_NN_*.docx) e no glossário.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function el(t,a,txt){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e}
+  function cor(t){return getComputedStyle(document.documentElement).getPropertyValue("--"+t).trim()}
+  function fmt(x,d){return x.toFixed(d).replace(".",",").replace("-","−")}
+
+  // gráfico 1: efeito do DM2 nos módulos selecionados (g e IC 95% do Hartung-Knapp)
+  var mods=[
+    {r:"Ilhotas · M6 (188 genes)",t:"ilhotas",g:1.265,lo:0.004,hi:2.527,p:"p HK = 0,05"},
+    {r:"Músculo · M4 (259 genes)",t:"musculo",g:-1.114,lo:-6.047,hi:3.819,p:"p efeito fixo = 0,004"},
+    {r:"Músculo · M6 (243 genes)",t:"musculo",g:0.829,lo:-4.457,hi:6.115,p:"p efeito fixo = 0,046"},
+    {r:"Fígado · M6 (238 genes)",t:"figado",g:0.415,lo:0.111,hi:0.720,p:"p = 0,007 (1 estudo)"},
+    {r:"Fígado · M15 (54 genes)",t:"figado",g:0.393,lo:0.088,hi:0.697,p:"p = 0,011 (1 estudo)"}];
+  function forest(){
+    var s=document.getElementById("forest"); if(!s) return; while(s.childNodes.length>1) s.removeChild(s.lastChild);
+    var L=190,R=590,min=-6.5,max=6.5,top=30,step=46, X=function(v){return L+(v-min)/(max-min)*(R-L)};
+    var ticks=[-6,-4,-2,0,2,4,6], yb=top+step*mods.length;
+    ticks.forEach(function(v){s.appendChild(el("line",{x1:X(v),x2:X(v),y1:top-10,y2:yb,"class":v===0?"ref":"eixo"}));
+      s.appendChild(el("text",{x:X(v),y:yb+18,"text-anchor":"middle","font-size":12},fmt(v,0)))});
+    s.appendChild(el("text",{x:(L+R)/2,y:yb+38,"text-anchor":"middle","font-size":12.5},"g de Hedges (DM2 − sem diabetes)"));
+    mods.forEach(function(m,i){var y=top+step*i+10,c=cor(m.t);
+      s.appendChild(el("text",{x:L-12,y:y+4,"text-anchor":"end","font-size":13.5},m.r));
+      s.appendChild(el("line",{x1:X(m.lo),x2:X(m.hi),y1:y,y2:y,stroke:c,"stroke-width":2.5,"stroke-linecap":"round"}));
+      s.appendChild(el("rect",{x:X(m.g)-6,y:y-6,width:12,height:12,fill:c}));
+      s.appendChild(el("text",{x:R+14,y:y+4,"font-size":13},"g = "+fmt(m.g,2)+" · "+m.p))});
+  }
+
+  // gráfico 2: AUC de cada estudo testado
+  var auc=[
+    {e:"GSE41762 (6×12)",t:"ilhotas",a:.694,lo:.433,hi:.956},{e:"GSE221156 (2×4)",t:"ilhotas",a:.5,lo:0,hi:1},
+    {e:"GSE76895 (2×6)",t:"ilhotas",a:1,lo:1,hi:1},{e:"GSE86469 (2×2)",t:"ilhotas",a:1,lo:1,hi:1},
+    {e:"GSE18732 (10×12)",t:"musculo",a:.558,lo:.289,hi:.827},{e:"GSE25462 (3×8)",t:"musculo",a:.25,lo:0,hi:.592},
+    {e:"GSE21340 ext. (3×5)",t:"musculo",a:.533,lo:.062,hi:1,x:1},
+    {e:"GSE184050 (9×19)",t:"sangue",a:.462,lo:.231,hi:.693},{e:"GSE250283 (4×8)",t:"sangue",a:.25,lo:0,hi:.573},{e:"GSE249102 (2×2)",t:"sangue",a:0,lo:0,hi:0},
+    {e:"GSE156993 ext. (5×4)",t:"sangue",a:.9,lo:.674,hi:1,x:1},{e:"GSE189005 ext. (5×5)",t:"sangue",a:.28,lo:0,hi:.676,x:1},
+    {e:"GSE130991 VC (146×58)",t:"figado",a:.635,lo:.548,hi:.721},
+    {e:"GSE15653 ext. (3×4)",t:"figado",a:.5,lo:0,hi:1,x:1}];
+  function aucs(){
+    var s=document.getElementById("aucs"); if(!s) return; while(s.childNodes.length>1) s.removeChild(s.lastChild);
+    var L=200,R=600,top=18,step=25, X=function(v){return L+v*(R-L)}, yb=top+step*auc.length;
+    [0,.25,.5,.75,1].forEach(function(v){s.appendChild(el("line",{x1:X(v),x2:X(v),y1:top-8,y2:yb,"class":v===.5?"ref":"eixo"}));
+      s.appendChild(el("text",{x:X(v),y:yb+18,"text-anchor":"middle","font-size":12},fmt(v,2)))});
+    s.appendChild(el("text",{x:(L+R)/2,y:yb+38,"text-anchor":"middle","font-size":12.5},"AUC (0,5 = acaso)"));
+    auc.forEach(function(d,i){var y=top+step*i+6,c=cor(d.t);
+      s.appendChild(el("text",{x:L-12,y:y+4,"text-anchor":"end","font-size":13},d.e));
+      if(d.hi>d.lo) s.appendChild(el("line",{x1:X(d.lo),x2:X(d.hi),y1:y,y2:y,stroke:c,"stroke-width":2,"stroke-linecap":"round"}));
+      s.appendChild(d.x?el("rect",{x:X(d.a)-5,y:y-5,width:10,height:10,fill:cor("paper"),stroke:c,"stroke-width":2}):el("circle",{cx:X(d.a),cy:y,r:5.5,fill:c}));
+      s.appendChild(el("text",{x:R+14,y:y+4,"font-size":12.5},fmt(d.a,2)))});
+    var leg=[["ilhotas","Ilhotas"],["musculo","Músculo"],["sangue","Sangue"],["figado","Fígado"]];
+    leg.forEach(function(l,i){var x=R+70,y=top+10+i*20; s.appendChild(el("circle",{cx:x,cy:y,r:5,fill:cor(l[0])})); s.appendChild(el("text",{x:x+10,y:y+4,"font-size":12.5},l[1]))});
+  }
+  function desenha(){forest();aucs()}
+  desenha();
+  try{ var mq=window.matchMedia("(prefers-color-scheme: dark)"); mq.addEventListener("change",desenha); new MutationObserver(desenha).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]}); }catch(e){}
+})();
+</script>

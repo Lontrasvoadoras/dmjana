@@ -1,0 +1,55 @@
+# Testes de sanidade completos e comparabilidade dos dados (pedido do usuário, 08/10/2026)
+versao: 1
+data: "2026-10-08"
+
+semente: 1
+completa: true                 # false (ou SANIDADE_RAPIDA=1): pula permutações e conjuntos aleatórios
+
+# genes resgatados (detectados) por amostra
+deteccao:
+  cpm_min: 1                   # RNA-seq/pseudo-bulk: gene detectado com CPM >= 1
+  # arrays: o fundo é o percentil 95 dos genes do cromossomo Y nas mulheres do estudo (genes que não
+  # deveriam estar expressos nelas), mediana entre os genes; detectado = acima desse fundo
+  genes_y: ["RPS4Y1", "DDX3Y", "KDM5D", "UTY", "EIF1AY", "USP9Y", "ZFY", "NLGN4Y", "TXLNGY"]
+  quantil_fundo: 0.95
+  quantil_sem_y: 0.25          # sem genes do Y medidos ou sem mulheres: fundo = percentil 25 da amostra
+  frac_amostras_gene: 0.5      # gene "detectado no estudo" se detectado em >= 50% das amostras
+  amostra_mad: 3               # amostra com genes detectados < mediana - 3 MAD do estudo: alerta
+
+# identidade do tecido e sexo pela expressão (controles biológicos)
+marcadores_tecido:
+  ilhotas: ["INS", "GCG", "SST", "PPY", "IAPP"]
+  figado: ["ALB", "APOA1", "HP", "FGB", "CYP2E1"]
+  adiposo: ["ADIPOQ", "PLIN1", "LEP", "CIDEA", "CIDEC"]
+  musculo: ["CKM", "ACTA1", "MYH7", "MYH2", "DES"]
+  sangue: ["HBB", "PTPRC", "LYZ", "S100A9", "CD3E"]
+gene_x: "XIST"
+
+# controles positivos do DM2 nas ilhotas (menores no DM2 em estudos grandes: Solimena 2018, Marselli 2020)
+controles_positivos:
+  ilhotas: ["SLC2A2", "ARG2", "IAPP", "PPP1R1A"]
+
+# nulos estatísticos (só na sanidade completa)
+permutacoes: 20                # rótulos DM2/ND sorteados entre as mulheres de 40-60 de cada estudo
+frac_p05_nulo_max: 0.08        # fração média de p < 0,05 sob permutação acima disso: modelo inflado
+conjuntos_aleatorios: 100      # conjuntos de genes sorteados com os tamanhos dos Hallmark
+frac_aleatorios_max: 0.15
+
+# conferência independente da meta-análise (metafor)
+metafor_genes: 100
+tolerancia_p: 1.0e-4
+
+# similaridade e confusão
+cor_duplicado: 0.9             # correlação centrada entre amostras acima disso: possível doador duplicado
+genes_duplicado: 2000          # genes mais variáveis usados nessa correlação
+smd_max: 0.8                   # diferença média padronizada DM2 x ND (idade, IMC, composição) acima disso: alerta
+jaccard_min: 0.5               # genes medidos em comum entre estudos do mesmo tecido abaixo disso: alerta
+
+# decisões do usuário sobre alertas já conferidos (a amostra continua listada, mas não conta como ALERTA)
+decisoes_usuario:
+  - regra: "marcadores de outro tecido"
+    amostras: ["GSE198922:11_PRE", "GSE198922:4_PRE", "GSE198922:46_PRE"]
+    decisao: "Mantidas (usuário, 08/10/2026): possível contaminação por músculo na biópsia de adiposo; ficam para não perder N. Nenhuma está no modelo principal (2 homens e 1 mulher fora de 40-60): entram só na rede (etapa 06) e na sensibilidade com todas as amostras."
+  - regra: "doador duplicado"
+    amostras: ["GSE29226:ND2", "GSE29226:ND3"]
+    decisao: "Não são a mesma pessoa (usuário, 08/10/2026): idades diferentes (65 e 60 anos). Perfis muito parecidos provavelmente por lote e pelo pequeno número de amostras do estudo (6)."

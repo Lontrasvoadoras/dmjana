@@ -1,0 +1,97 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 02: metadados por amostra
+# Lê as características de cada amostra no GEO e harmoniza sexo, idade, status de DM2, tecido,
+# material e condição basal; conta DOADORAS únicas de 40-60 anos por estudo e tecido.
+# Todas as expressões regulares ficam aqui (nada fixo no código) e são comparadas em minúsculas.
+# Casos de teste: input/testes_regras.csv. Correções manuais: input/curadoria.csv.
+# =============================================================================
+versao: 1
+data: "2026-10-06"
+
+download:
+  url: "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=%s&targ=gsm&form=text&view=brief"
+  pausa_seg: 0.4
+  tentativas: 3
+  max_amostras: 5000                # séries maiores não são lidas (células únicas com uma amostra por célula)
+  # lidas mesmo acima do limite (revisão de metodologia de 07/10/2026, item M2): patch-seq de ilhotas com
+  # doadores DM2; uma amostra por célula, mas com doador, sexo, idade e status em cada célula
+  forcar_leitura: ["GSE124742"]
+
+# ---------------- sexo ----------------
+sexo:
+  chave: "(^|[^a-z])(sex|gender|gander)([^a-z]|$)"                   # "gander": erro de digitação no GSE254985
+  feminino: "^(f|fem|female|woman|women|femme|feminino|mujer)$|female"  # "FEM"/"MAL": auditoria de 06/10/2026
+  masculino: "^(m|mal|male|man|men|homme|masculino|hombre)$|(^|[^e])male"
+
+# ---------------- idade ----------------
+idade:
+  chave: "(^|[^a-z])(age|age \\(y[a-z]*\\)|age_years|donor age|age at [a-z ]*(biopsy|sampling|surgery|death|collection|donation))([^a-z]|$)"
+  excluir_chave: "stage|average|passage|gestational|dosage|percentage|image|diagnos|onset|menopaus|menarche|duration|since"
+  faixa_max_anos: 5                 # faixas de até 5 anos viram o ponto médio; mais largas ficam sem idade
+
+# ---------------- status de DM2 ----------------
+# Ordem de decisão: EXCLUIR > INTERMEDIARIO > (ND / T2D / AMBIGUO) > "diabetes" sem tipo.
+# Frases de "não diabético" são retiradas antes de procurar DM2 (assim "non-diabetic" não vira DM2).
+# Cada chave de status é classificada sozinha e depois combinada: EXCLUIR > INTERMEDIARIO > ND e T2D juntos = AMBIGUO.
+# Sem status nas chaves: título + fonte; ainda sem: todos os valores das características.
+status:
+  chave: "disease|status|diagnos|condition|group|phenotype|state|diabet|t2d|glucose tolerance|glyc[ae]mic|subject type|patient type|cohort|class"
+  excluir_chave: "smoking|menopaus|vital|hormone|treatment|alcohol|hypertension|lipid|stage|grade"
+  excluir: "type ?1|type i |type i$|t1d|t1dm|(^|[^n-])iddm|gestational|lada|mody|type 3c|cystic fibrosis|pancreatitis|monogenic|secondary diabetes"
+  intermediario: "pre-?diabet|impaired glucose|impaired fasting|(^|[^a-z])igt([^a-z]|$)|(^|[^a-z])ifg([^a-z]|$)|insulin[- ]resistant|glucose intoleran"
+  nao_diabetico: "(^|[^a-z])ctrl([^a-z]|$)|non[- ]?diabet[a-z]*|(no|without|free of)[ -](t2d|t2dm|diabet[a-z]*|type 2 diabet[a-z]*)|(^|[^a-z])nd([^a-z]|$)|healthy|normal glucose tolerance|(^|[^a-z])ngt([^a-z]|$)|normoglyc[a-z]*|euglyc[a-z]*|insulin[- ]sensitive|^normal$|(^|[^a-z-])controls?([^a-z]|$)"
+  dm2: "type ?2|type ii|(^|[^a-z])t2d|t2dm|(^|[^a-z])dm ?2([^a-z]|$)|dmt2|niddm|non-insulin[- ]dependent"   # "DM2": auditoria de 06/10/2026
+  diabetes_sem_tipo: "diabet"         # vira DM2 se o estudo não cita diabetes tipo 1; senão AMBIGUO
+  contexto_tipo1: "type ?1|type i diabet|t1d|t1dm"
+  # chave que já é a pergunta "tem DM2?" (ex.: "type 2 diabetes (t2d): No"; "diabetes type: none")
+  chave_binaria: "diabet|t2d|niddm"
+  chave_binaria_excluir: "family|history|duration|medication|drug|treat|age|onset|year|type 1|t1d|gestational|complication|retinopathy|nephropathy|neuropathy"
+  sim: "^(yes|y|1|true|positive|present|diabetic)$"
+  nao: "^(no|n|0|false|negative|absent|none)$"
+
+# ---------------- tecido ----------------
+tecido:
+  chave: "tissue|cell type|organ|source|biopsy|cell population"
+  mapa:
+    ilhotas: "islet|beta[- ]?cell|pancrea"
+    musculo: "skeletal muscle|vastus|muscle"
+    adiposo: "adipose|(^|[^a-z])fat([^a-z]|$)|adipocyte|omentum|omental|subcutaneous"
+    figado: "liver|hepat"
+    sangue: "blood|pbmc|leukocyte|leucocyte|monocyte|lymphocyte|neutrophil|mononuclear|t cell|b cell|cd14|cd4|cd8|granulocyte|platelet|serum|plasma"
+    osso: "bone|osteoblast|osteoclast|marrow"
+    endometrio_ovario: "endometri|ovar|uter|granulosa"
+    mama: "breast|mammary"
+    vasos: "arter|aort|vascular|endotheli|vein|venous|vessel|intima|carotid|atheroscl|plaque"   # "Intima media" (GSE13760)
+
+# ---------------- material e condição basal ----------------
+material:
+  cultivado: "cultur|cell line|ipsc|induced pluripotent|differentiat|in vitro|myotube|preadipocyte|organoid|passage|immortali|transfect|skeletal myocytes?|primary (human )?(skeletal )?muscle cells|satellite cells?|adipose([- ]derived)? (stem|stromal) cells?|(^|[^a-z])ascs?([^a-z]|$)|mesenchymal stem"   # ASC cultivadas (GSE174502, etapa 03)
+  # ilhotas isoladas sempre passam por cultura curta antes da extração: "cultured islets" não é material cultivado
+  cultivado_excecao: "cultured (human )?(pancreatic )?islets?|islets? (were )?cultured|islet culture|culture of islets|passages?: (fresh frozen|fresh|n/?a|none)|cell line: primary cells?"
+  # "passage: Fresh Frozen" (GSE108971) e "cell line: primary cells" (GSE274826) não são cultura (auditoria de 06/10/2026)
+intervencao:
+  # valor vazio não é intervenção (GSE13015); "visit: V1" = primeira visita = linha de base (decisão de 06/10/2026)
+  chave: "treatment|treated|time ?point|^time$|^time |visit|stimulat|^insulin$|insulin (treatment|stimulation|infusion)|clamp|exercise|intervention|^drug$|medium|incubat|^agent$|dose"
+  # medidas clínicas não são intervenção na amostra ("fasting insulin", "insulin_0h", "glucose_2h")
+  excluir_chave: "fasting|glucose|hba1c|ogtt|homa|_[0-9]+h|level|sensitivity|resistance|death|since|duration|diagnos|history|year|smok"
+  basal: "baseline|basal|before|pre[- ]?(treatment|intervention|exercise|surgery)|^pre$|^rest|unstimulated|^no treatment|^ctl$|^ctrl$|^mock|^v1$|^visit ?1$|untreated|none|vehicle|^control$|^0 ?(h|hr|min|week|day)?s?$|fasting|^no$|^-$|^na$|placebo"
+
+# ---------------- ensaio de expressão de mRNA ----------------
+# Correção de 06/10/2026 (etapa 04): só contam amostras de expressão de mRNA. Arrays: tipo "RNA" e plataforma
+# que não seja de miRNA, promotores, SNP/genotipagem, metilação ou CGH. Sequenciamento: estratégia RNA-Seq
+# ("OTHER" não confirma expressão e não conta; ATAC, ChIP, miRNA-Seq não contam).
+ensaio:
+  tipos_array_expressao: ["RNA"]
+  estrategias_expressao: ["RNA-Seq", "ssRNA-seq"]
+  plataforma_nao_expressao: "mirna|microrna|promoter|tiling|snp|genotyp|omni|methylation|methyl|cgh|copy number|chip-chip"
+
+# ---------------- doador ----------------
+doador:
+  chave: "(^|[^a-z])(donor|individual|subject|patient|participant)[ _]?(id|number|no|code)?([^a-z]|$)|unos|rrid|^id$"
+  excluir_chave: "status|type|group|age|sex|gender|bmi"
+
+# ---------------- elegibilidade (mulheres de 40-60 anos) ----------------
+elegibilidade:
+  janela_idade: [40, 60]             # 40 <= idade < 61 (60 anos completos incluídos)
+  min_por_grupo: 2                   # doadoras DM2 e ND de 40-60 por estudo x tecido (validado pelo usuário em 06/10/2026)
+  min_frac_campo: 0.5                # abaixo disso o estudo é "sem sexo" / "sem idade" / "sem status"

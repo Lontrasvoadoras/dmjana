@@ -1,0 +1,77 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPAS 06-08: redes de coexpressão, enriquecimento e painel entre tecidos
+# Intenção (docs/intencao_06_redes.docx) aprovada pelo usuário em 07/10/2026 ("reavaliar o workflow para
+# as novas etapas e rodar tudo"), com as decisões dele: (1) módulos construídos aqui com todas as amostras de
+# cada tecido; (2) se nenhum módulo passar do FDR, modo exploratório (opção B); (3) Hallmark, Reactome e GO;
+# (4) STRING e OmniPath. Decisões técnicas R1-R8 abaixo.
+# =============================================================================
+versao: 1
+data: "2026-10-07"
+
+# ---------------- etapa 06: redes (WGCNA) ----------------
+rede:
+  min_doadores: 15                 # R1: estudos com menos doadores só entram no teste das mulheres de 40-60
+  max_genes: 8000                  # R2: genes codificantes comuns, os mais variáveis
+  cor: "bicor"
+  max_p_outliers: 0.05             # bicor robusto a valores extremos
+  tipo: "signed"
+  r2_min: 0.80                     # forma livre de escala
+  potencias: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20]
+  min_modulo: 30
+  merge_corte: 0.25                # funde módulos com eigengenes de correlação >= 0,75
+  deep_split: 2
+  remover_lote: true               # R8: tira o efeito da data de leitura antes da rede (preservando status e sexo)
+  # pedido do usuário (08/10/2026): módulos presentes em pelo menos 2 estudos, não em todos. O consenso usa o
+  # quantil (n-2)/(n-1) da força das ligações entre os n estudos de construção (= 2º maior valor): com 3 estudos,
+  # basta a ligação aparecer em 2; com 2 estudos continua sendo nos dois
+  consenso_min_estudos: 2
+preservacao:
+  zsummary_min: 2                  # R3
+  min_estudos: 2                   # módulo preservado = Zsummary >= 2 em estudos suficientes para somar 2 com a referência (08/10/2026)
+  permutacoes: 50
+  max_tamanho_modulo: 1000         # módulos maiores são subamostrados no cálculo (padrão da WGCNA)
+teste:
+  fdr: 0.05                        # R5
+  fdr_sugestivo: 0.10
+  p_exploratorio: 0.05             # opção B: p < 0,05 na meta-análise E mesmo sentido em todos os estudos (2+ estudos)
+  fdr_rop2: 0.10                   # "exploratório (>= 2 estudos)": rOP r = 2 com FDR < 0,10 e os 2 estudos mais fortes no mesmo sentido (08/10/2026)
+  # tecidos com exatamente 2 estudos (músculo, sangue): o Hartung-Knapp usa t com 1 grau de liberdade e nenhum p < 0,05 é
+  # alcançável; o nível exploratório usa o efeito fixo (inverso da variância), rótulo "exploratório (efeito fixo, 2 estudos)".
+  # O Hartung-Knapp continua sendo o teste principal (FDR). Decisão do usuário, 08/10/2026.
+  efeito_fixo_2_estudos: true
+genes_chave:
+  kme_min: 0.70                    # R6; em pelo menos 2 estudos de construção (kME_2; decisão do usuário de 08/10/2026; antes: no pior estudo)
+
+# ---------------- etapa 07: enriquecimento ----------------
+enriquecimento:
+  colecoes:                        # R7 (msigdbr)
+    Hallmark: {collection: "H", subcollection: ""}
+    Reactome: {collection: "C2", subcollection: "CP:REACTOME"}
+    GO_BP: {collection: "C5", subcollection: "GO:BP"}
+  tamanho_min: 15
+  tamanho_max: 500
+  # calibração empírica (revisão de 10/10/2026): no GSE130991 18% dos conjuntos de genes SORTEADOS davam p < 0,05 no
+  # escore de via; o p de cada via passa a ser comparado com conjuntos sorteados do mesmo tamanho, no mesmo pipeline
+  calibracao_sorteios: 2000
+  calibracao_semente: 1
+  fdr_ora: 0.05
+  fdr_gsea: 0.05
+  fdr_gsea_exploratorio: 0.25      # limiar exploratório usual da GSEA (Subramanian et al. 2005)
+
+# ---------------- etapa 08: conectividade e painel ----------------
+conectividade:
+  string_versao: "12.0"
+  string_score_min: 700            # R7: alta confiança
+  omnipath_ligante_receptor: true
+painel:
+  # pontos por gene: efeito replicado; gene-chave de módulo selecionado; leading edge de via forte
+  # (significativa/sugestiva) ou convergente; ligação com candidato de tecido com 2+ estudos (STRING ou
+  # ligante-receptor); robusto a deixar um estudo de fora (sentido mantido e p < robusto_p_max).
+  # Critérios endurecidos pelo usuário em 08/10/2026 (D1): antes, todo candidato de via ganhava 3 pontos.
+  pontos_min: 3
+  robusto_p_max: 0.10
+  # apresentação por PROGRAMA (decisão do usuário, 08/10/2026): os critérios não são independentes (gene de módulo
+  # ganha juntos os pontos de efeito, gene-chave e via convergente; proteínas de complexos têm muitas ligações no STRING),
+  # então o painel é lido por programa (módulo selecionado do tecido), com os genes mais centrais (kME) em destaque;
+  # a lista completa fica como tabela suplementar (painel.csv)
+  genes_por_programa: 10

@@ -1,0 +1,17 @@
+titulo,especies,n_amostras,esperado,motivo
+Single-cell multiome (ATAC and RNA) landscapes of human islets in type 2 diabetes,Homo sapiens,40,revisar,GSE200044: multiome tem expressão
+Altered DNA methylation of glycolytic and lipogenic genes in liver from obese and type 2 diabetic patients [transcriptome],Homo sapiens,34,revisar,GSE64998: metilação + transcriptoma
+Adipose tissue gene expression is differentially regulated with different rates of weight loss,Homo sapiens,152,incluido,GSE77962: rates não é rat
+Gene-expression profiles of whole blood cells from a Han Chinese population with or without type 2 diabetes,synthetic construct; Homo sapiens,130,incluido,GSE189007: synthetic construct não é espécie
+Type 2 Diabetes mellitus: mRNA and miRNA profiling,Homo sapiens; Human betaherpesvirus 5,60,revisar,GSE26168: vírus ignorado; miRNA no título vai para revisão
+A single cell atlas of human adipose tissue,Mus musculus; Homo sapiens,50,revisar,série humana com parte em camundongo
+Expression in adipose tissue and liver from a spontaneous rat model of Type 2 diabetes,Homo sapiens; Rattus norvegicus,25,excluido,rat como palavra exata exclui
+Insulin signaling in mice skeletal muscle,Homo sapiens,12,excluido,espécie no título
+Islets from type 2 diabetic donors,Mus musculus,20,excluido,sem amostras humanas
+Skeletal muscle in type 2 diabetes,Homo sapiens,5,incluido,mínimo agora 4
+Skeletal muscle in type 2 diabetes,Homo sapiens,3,excluido,menos de 4
+Transcriptome of HUVECs transfected with CAVIN3-siRNA,Homo sapiens,9,excluido,siRNA ainda exclui
+Diabetes-associated breast cancer transcriptome,Homo sapiens,20,excluido,câncer sempre exclui (decisão de 06/10/2026)
+Comparison of Kidney Transcriptomic Profiles of Diabetic Nephropathy,Homo sapiens,36,excluido,tecido fora do escopo
+PBMCs from patients with diabetic nephropathy,Homo sapiens,20,incluido,tecido de interesse salva
+Genome-wide BeadChip expression of islets,Homo sapiens,20,incluido,ChIP sensível a maiúsculas

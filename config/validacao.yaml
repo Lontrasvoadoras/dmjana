@@ -1,0 +1,39 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 09: validação com célula única (pedido do usuário, 08/10/2026)
+# Pergunta: o programa estromal das ilhotas (módulo M6, painel: THBS2, IL6, LTBP1, HGF...) é expressão alterada
+# DENTRO das células ou mais células estromais na amostra (composição)? E por que os estudos de célula única
+# concordam pouco com os arrays?
+#  9.1 pseudo-bulk por doadora E por tipo celular (GSE221156, h5ad do CELLxGENE): onde os genes do programa são
+#      expressos e se mudam com o DM2 dentro de cada tipo
+#  9.2 deconvolução dos arrays com referência de célula única (NNLS): proporção de cada tipo celular em cada amostra,
+#      comparação DM2 x ND e efeito do programa ajustado pela composição. O método é testado antes no próprio
+#      GSE221156, cuja composição verdadeira é conhecida
+# Escopo: o contraste continua sendo só mulheres de 40-60 (DM2 x ND); as outras amostras entram só para estimar a
+# variância (como na sensibilidade "todas as amostras" da etapa 05) e para montar a referência de tipos celulares.
+# =============================================================================
+versao: 1
+data: "2026-10-08"
+
+h5ad: "D:/dm_jana_cache/cellxgene/GSE221156_integrado_464a2c70.h5ad"
+gse_referencia: "GSE221156"
+campo_tipo: "Annotated_Clusters"
+# agrupamento dos tipos anotados (Epsilon e Schwann, < 400 células, ficam fora)
+tipos:
+  beta: ["Beta"]
+  alfa: ["Alpha", "Proliferating_Alpha"]
+  delta: ["Delta"]
+  PP: ["Gamma"]
+  ductal: ["Ductal"]
+  acinar: ["Acinar"]
+  estrelada: ["Stellate", "Activated_Stellate"]
+  endotelial: ["Endothelial"]
+  imune: ["Immune", "Mast"]
+min_celulas_tipo: 20            # doadora x tipo com menos células fica fora do teste daquele tipo
+
+# deconvolução
+marcadores:
+  cpm_min: 10                   # gene expresso no tipo (CPM médio)
+  log2_razao_min: 2             # pelo menos 4x o maior entre os outros tipos
+  por_tipo: 30                  # até 30 marcadores por tipo (maior razão)
+estudos_deconvolucao: ["GSE41762", "GSE76895", "GSE86469", "GSE221156"]
+ajuste_tipos: ["estrelada"]     # proporção usada como covariável no efeito ajustado (hipótese: mais estroma)

@@ -1,0 +1,308 @@
+# =============================================================================
+# workflow_dm_menopausa - GLOSSÁRIO de conceitos técnicos
+# Pedido do usuário (07/10/2026): cada conceito técnico usado nas análises é explicado nos
+# documentos. Cada termo lista as etapas em que aparece; o documento Word de cada etapa traz a
+# seção "Conceitos técnicos" com os termos dela, e docs/glossario.docx reúne todos.
+# Ao introduzir um conceito novo numa etapa, acrescentá-lo aqui na mesma alteração.
+# =============================================================================
+termos:
+  - termo: "GEO, GSE, GSM e GPL"
+    etapas: ["01", "02", "03", "04"]
+    explicacao: "O GEO (Gene Expression Omnibus) é o banco público do NCBI onde pesquisadores depositam dados de expressão gênica. Cada estudo é uma série (GSE), cada amostra é um GSM e cada tecnologia de medida (um modelo de array ou de sequenciador) é uma plataforma (GPL)."
+  - termo: "E-utilities"
+    etapas: ["01"]
+    explicacao: "Interface do NCBI para fazer buscas por programa, com o texto exato da consulta registrado. Permite repetir a busca e saber exatamente o que foi procurado."
+  - termo: "Triagem pelo título"
+    etapas: ["01"]
+    explicacao: "Classificação automática das séries a partir de termos no título (ex.: 'mouse', 'cell line'), com limite de palavra (o termo precisa ser palavra inteira). Cada exclusão grava o termo que a causou. Limitação: um título pode citar um termo sem que o estudo seja daquele tipo, por isso há casos de teste e auditoria das exclusões."
+  - termo: "Estudos-semente (sensibilidade da busca)"
+    etapas: ["01"]
+    explicacao: "Estudos já conhecidos por ter mulheres de 40–60 anos com DM2 e controles. Se a busca automática não os encontra, faltam termos. Mede a sensibilidade (quanto do que existe a busca acha)."
+  - termo: "Expressão regular (regex)"
+    etapas: ["01", "02"]
+    explicacao: "Padrão de texto usado para reconhecer variações de escrita (ex.: 'type 2 diabetes', 'T2D', 'DM2'). Todas ficam nos arquivos de configuração e são testadas com casos de teste antes de cada execução."
+  - termo: "Características da amostra e harmonização"
+    etapas: ["02"]
+    explicacao: "Cada amostra no GEO traz campos livres ('age: 55', 'gender: F', 'disease state: T2D'), escritos de formas diferentes em cada estudo. Harmonizar é traduzir esses textos para categorias únicas (sexo F/M, idade em anos, status DM2/ND), por regras explícitas."
+  - termo: "Status ND, DM2, INTERMEDIÁRIO, EXCLUIR e AMBÍGUO"
+    etapas: ["02"]
+    explicacao: "ND = sem diabetes (controle); DM2 = diabetes tipo 2. INTERMEDIÁRIO = pré-diabetes ou resistência à insulina declarada (sai, para não misturar com controles). EXCLUIR = outro tipo de diabetes (tipo 1, gestacional, MODY). AMBÍGUO = dois rótulos ao mesmo tempo ou 'diabetic' sem tipo num estudo que também tem tipo 1 (sai)."
+  - termo: "Doadora única"
+    etapas: ["02", "04"]
+    explicacao: "Uma mesma pessoa pode ter várias amostras (réplicas, tempos, células). A unidade que conta para a elegibilidade e para a estatística é a pessoa, não a amostra; contar amostras como pessoas inflaria o tamanho do estudo."
+  - termo: "Amostra apta"
+    etapas: ["02", "04"]
+    explicacao: "Amostra humana, de ensaio de mRNA, com status DM2 ou sem diabetes, de tecido de interesse, não cultivada e em condição basal. Só amostras aptas são usadas."
+  - termo: "Material cultivado"
+    etapas: ["02"]
+    explicacao: "Células mantidas em cultura ou diferenciadas em laboratório (ex.: miotubos, células-tronco de tecido adiposo). A expressão muda com a cultura e deixa de representar o tecido da pessoa, por isso essas amostras saem. Ilhotas isoladas passam por cultura curta antes da extração e não contam como cultivadas."
+  - termo: "Condição basal"
+    etapas: ["02"]
+    explicacao: "Estado da amostra antes de qualquer intervenção do estudo (remédio, exercício, estímulo, clamp de insulina). Amostras sob intervenção saem; fica a basal do mesmo doador."
+  - termo: "SuperSeries"
+    etapas: ["02"]
+    explicacao: "Série do GEO que agrupa outras séries (subséries) e repete as mesmas amostras. Contar as duas duplicaria pessoas; a SuperSeries fica de fora."
+  - termo: "Ensaio de mRNA"
+    etapas: ["02", "04"]
+    explicacao: "Medida da expressão de genes (RNA mensageiro), por array de expressão ou por sequenciamento RNA-Seq. Uma mesma série pode ter outros ensaios das mesmas pessoas (miRNA, metilação, ATAC, promotores, genotipagem); esses não medem expressão de genes e não contam."
+  - termo: "Réplica técnica"
+    etapas: ["02", "04"]
+    explicacao: "A mesma amostra biológica medida mais de uma vez. Não é uma pessoa a mais: as réplicas são promediadas num único perfil por pessoa."
+  - termo: "Curadoria manual"
+    etapas: ["02", "03"]
+    explicacao: "Correção registrada à mão (input/curadoria.csv) quando o metadado do GEO não permite a regra automática decidir, sempre com o motivo e a fonte (descrição da amostra, artigo)."
+  - termo: "Sexo genético"
+    etapas: ["03", "04"]
+    explicacao: "Sexo inferido pela própria expressão gênica: o gene XIST (cromossomo X) é expresso em mulheres, e genes do cromossomo Y (RPS4Y1, DDX3Y, KDM5D e outros) só em homens. Serve para recuperar sexo ausente nos metadados e para detectar trocas de amostra (sexo genético diferente do declarado)."
+  - termo: "Percentil dentro da amostra"
+    etapas: ["03", "04"]
+    explicacao: "Posição de um gene na ordenação de todos os genes medidos na mesma amostra (0 = o menos expresso, 1 = o mais expresso). Não depende da escala do array e funciona mesmo quando o estudo tem um só sexo. É a leitura (a) do sexo genético."
+  - termo: "Escore z (padronização)"
+    etapas: ["03", "04"]
+    explicacao: "Quantos desvios-padrão um valor está acima ou abaixo da média do grupo: z = (valor − média) / desvio-padrão. z = 0 é a média; z = −3 está 3 desvios-padrão abaixo. Num grupo de n valores, o z mais extremo possível é (n − 1)/√n, então com até 10 valores nenhum z passa de 3 em módulo."
+  - termo: "k-means e separação em desvios-padrão"
+    etapas: ["03", "04"]
+    explicacao: "k-means divide as amostras em dois grupos pelo escore de sexo (genes Y − XIST). Os grupos só são aceitos se estiverem bem separados: distância entre os centros de pelo menos 4 desvios-padrão dentro dos grupos. É a leitura (b) do sexo genético; sozinha não funciona quando o estudo tem um só sexo."
+  - termo: "Validação do método com sexo declarado"
+    etapas: ["03"]
+    explicacao: "Antes de usar o sexo genético onde ele falta, a mesma regra é aplicada a estudos que declaram o sexo, na mesma plataforma, e se mede o acerto. Evita ajustar limiares só nos próprios casos que se quer resolver (raciocínio circular)."
+  - termo: "Dados brutos x matriz do autor"
+    etapas: ["04"]
+    explicacao: "Brutos são os arquivos que saem do equipamento (CEL, contagens de reads). A matriz do autor já foi normalizada e filtrada pelos autores, cada um de um jeito. Usar brutos permite processar todos os estudos da mesma forma; a matriz do autor só é usada quando não há brutos, e isso fica registrado."
+  - termo: "Sonda (probe) e anotação"
+    etapas: ["04"]
+    explicacao: "Nos arrays, cada sonda mede um pedaço de RNA. A anotação liga a sonda ao gene (símbolo oficial). Sondas sem gene ou ligadas a mais de um gene saem; quando um gene tem várias sondas, fica a de maior expressão média."
+  - termo: "log2"
+    etapas: ["04"]
+    explicacao: "Escala em que cada unidade a mais significa o dobro de expressão. Deixa as distribuições mais simétricas e transforma diferenças proporcionais em diferenças somadas (ex.: log2 fold change de 1 = expressão dobrada)."
+  - termo: "RMA"
+    etapas: ["04"]
+    explicacao: "Robust Multi-array Average: processamento padrão dos arrays Affymetrix. Corrige o ruído de fundo, iguala a distribuição entre arrays (quantis) e resume as várias sondas de um gene num valor em log2."
+  - termo: "Normalização por quantis"
+    etapas: ["04"]
+    explicacao: "Força todas as amostras de um estudo a ter a mesma distribuição de valores, removendo diferenças técnicas globais (quantidade de RNA, intensidade do scanner). Feita dentro de cada estudo."
+  - termo: "neqc e normexp"
+    etapas: ["04"]
+    explicacao: "Métodos do pacote limma para arrays Illumina (neqc, que usa as sondas negativas e o p de detecção) e Agilent (normexp): estimam e retiram o ruído de fundo antes da normalização por quantis."
+  - termo: "Contagens, CPM, TMM e filterByExpr (RNA-seq)"
+    etapas: ["04"]
+    explicacao: "No RNA-seq a expressão é o número de leituras (reads) de cada gene. CPM = contagens por milhão de leituras da amostra (corrige o tamanho da biblioteca). TMM ajusta diferenças de composição entre amostras. filterByExpr retira genes com contagens baixas demais para estimar algo. O resultado usado é log2-CPM."
+  - termo: "Tamanho da biblioteca"
+    etapas: ["04"]
+    explicacao: "Total de leituras de uma amostra de RNA-seq. Abaixo de 1 milhão o perfil fica pouco confiável e a amostra sai."
+  - termo: "Pseudo-bulk"
+    etapas: ["04"]
+    explicacao: "Em estudos de célula única, soma das contagens de todas as células de cada pessoa, formando um perfil por pessoa comparável a um tecido inteiro. Evita tratar milhares de células da mesma pessoa como observações independentes."
+  - termo: "h5ad (AnnData)"
+    etapas: ["04"]
+    explicacao: "Formato de arquivo de célula única que guarda as contagens de cada célula e, para cada célula, o doador, o sexo, a idade e a doença. Usado no GSE221156, cujos arquivos brutos misturam doadores numa mesma biblioteca."
+  - termo: "NanoString (painel dirigido)"
+    etapas: ["04"]
+    explicacao: "Tecnologia que conta diretamente as moléculas de um conjunto fixo de genes (aqui ~750 genes metabólicos), não do genoma inteiro. Normalizada por controles positivos e genes de referência. Serve para análise dirigida a esses genes, não para a meta-análise do genoma inteiro."
+  - termo: "Conectividade entre amostras (z < −3)"
+    etapas: ["04"]
+    explicacao: "Mede o quanto cada amostra se parece com as demais do mesmo estudo. Usa os 5.000 genes mais variáveis; a correlação entre cada par de amostras vira uma adjacência ((1 + correlação)/2)²; a conectividade de uma amostra é a soma das adjacências com todas as outras, padronizada em escore z. z < −3 = muito menos parecida com o grupo do que o normal, sinal típico de problema técnico (RNA degradado, falha do array, contaminação, troca de rótulo), e a amostra sai. Método de Oldham et al. (2012), que usam limiares mais brandos (−2 a −2,5); −3 é mais conservador. Limitações: com até 10 amostras nenhum z chega a −3 (estudos pequenos ficam sem esse filtro); e destoar pode ser biológico (ex.: DM2 grave), por isso cada retirada aparece na PCA e na tabela para revisão."
+  - termo: "PCA (análise de componentes principais)"
+    etapas: ["04"]
+    explicacao: "Resume milhares de genes em poucos eixos que concentram a maior parte da variação entre amostras. No gráfico, amostras parecidas ficam próximas; grupos compactos podem indicar réplicas, e pontos isolados, amostras discrepantes. O percentual em cada eixo é a parte da variação que ele explica."
+  - termo: "Efeito de lote (batch) e por que não juntar as matrizes"
+    etapas: ["05"]
+    explicacao: "Diferenças técnicas entre estudos (plataforma, laboratório, protocolo) que mudam todos os valores de expressão. Corrigir isso juntando as matrizes (ex.: ComBat) é arriscado quando estudo, plataforma e proporção de DM2 andam juntos: a correção pode apagar parte do efeito real do DM2 ou criar efeitos falsos. Por isso cada estudo é analisado sozinho e só os resultados são combinados."
+  - termo: "Modelo linear com limma"
+    etapas: ["05"]
+    explicacao: "Para cada gene, ajusta a expressão em função dos grupos (ex.: mulheres de 40–60 com DM2, mulheres de 40–60 sem diabetes, outras mulheres, homens) e testa a diferença de interesse (contraste). A moderação empírica de Bayes (eBayes) toma emprestada informação de todos os genes para estimar melhor a variância, o que ajuda muito com poucas amostras."
+  - termo: "Modelo de médias por grupo e contraste"
+    etapas: ["05"]
+    explicacao: "O contraste é a comparação de interesse: DM2 − sem diabetes nas mulheres de 40–60. Na análise principal (decisão de 07/10/2026) o modelo usa só essas mulheres. Numa sensibilidade, todas as amostras do estudo entram em grupos de médias (status × sexo × faixa de idade): as outras amostras não entram na comparação, mas mudam a estimativa da variância ('ruído') de cada gene. Com homens e outras idades a variância estimada fica maior e a análise mais conservadora; só com as mulheres de 40–60 ela é mais fiel ao grupo de interesse, mas estimada com menos pessoas."
+  - termo: "voom e limma-trend"
+    etapas: ["05"]
+    explicacao: "Formas de usar o limma com RNA-seq. voom calcula, a partir das contagens brutas, um peso para cada valor (contagens baixas são menos precisas). limma-trend é usado quando só há valores já normalizados (sem contagens brutas) e modela a variância em função do nível de expressão."
+  - termo: "log2 fold change (logFC)"
+    etapas: ["05"]
+    explicacao: "Diferença de expressão entre DM2 e sem diabetes na escala log2: 1 = o dobro, −1 = a metade, 0 = igual. Depende da plataforma (arrays tendem a comprimir as diferenças), por isso não é comparado diretamente entre tecnologias."
+  - termo: "Tamanho de efeito padronizado (g de Hedges)"
+    etapas: ["05"]
+    explicacao: "Diferença entre as médias de DM2 e sem diabetes dividida pelo desvio-padrão dentro dos grupos, com correção para amostras pequenas. Não tem unidade, então é comparável entre arrays e RNA-seq. g = 0,5 significa que as médias distam meio desvio-padrão. Tem uma variância, usada para pesar o estudo na meta-análise: o erro padrão do logFC no próprio ajuste do limma, levado à escala de g (sem covariáveis, J²(1/n1 + 1/n2)), mais g²/(2 df) pela incerteza do desvio-padrão (df = graus de liberdade moderados do limma). Fórmula revista em 08/10/2026 para ficar coerente com o p do limma. O desvio-padrão usado é sempre o dos grupos SEM covariáveis: se fosse o que sobra depois de ajustar por lote, IMC ou composição, ele encolheria e o g ficaria inflado e incomparável entre estudos."
+  - termo: "Meta-análise de efeitos aleatórios"
+    etapas: ["05"]
+    explicacao: "Combina, gene a gene, os tamanhos de efeito dos estudos de um tecido numa média ponderada: estudos com mais pessoas pesam mais. 'Efeitos aleatórios' (método de DerSimonian-Laird) admite que o efeito verdadeiro varia um pouco entre estudos (populações, protocolos) e, quando varia, aumenta a incerteza do resultado em vez de esconder a discordância."
+  - termo: "Heterogeneidade (I²)"
+    etapas: ["05"]
+    explicacao: "Percentual da variação entre os estudos que não é explicado pelo acaso. I² perto de 0% = estudos concordam; acima de 50% = discordam bastante, e o efeito combinado deve ser lido com cautela."
+  - termo: "Teste múltiplo e FDR (Benjamini-Hochberg)"
+    etapas: ["05"]
+    explicacao: "Testando ~20 mil genes, cerca de 1 mil dariam p < 0,05 só por acaso. O FDR (taxa de falsas descobertas) corrige isso: q < 0,05 significa que, entre os genes chamados de significativos, espera-se no máximo 5% de falsos. A correção é feita dentro de cada tecido."
+  - termo: "Análise de sensibilidade e 'deixar um de fora'"
+    etapas: ["05"]
+    explicacao: "Repetir a análise mudando uma escolha (tirar um estudo por vez, tirar as matrizes do autor, ajustar por IMC, usar todas as mulheres) para ver se o resultado se mantém. Resultado que só existe com um estudo específico não é robusto."
+  - termo: "Escore de via por amostra"
+    etapas: ["05"]
+    explicacao: "Para cada conjunto de genes de uma via biológica (ex.: fosforilação oxidativa), a média dos valores padronizados (z) dos seus genes em cada amostra. Resume dezenas de genes num número por pessoa, o que dá mais poder com poucas doadoras do que testar gene a gene; o escore passa pelo mesmo modelo e pela mesma meta-análise."
+  - termo: "Conjuntos Hallmark (MSigDB)"
+    etapas: ["05"]
+    explicacao: "50 conjuntos de genes curados que resumem processos biológicos bem definidos (inflamação, metabolismo de glicose, resposta à insulina, fosforilação oxidativa etc.). Usar poucos conjuntos, definidos antes de ver os dados, reduz o número de testes e o risco de achados por acaso."
+  - termo: "Composição celular"
+    etapas: ["05"]
+    explicacao: "Um tecido é uma mistura de tipos de células (na ilhota, células beta, alfa, delta, ductais). Se o DM2 muda a proporção de células, genes podem parecer alterados só porque a mistura mudou. Escores de genes marcadores de cada tipo celular, usados como covariável numa análise de sensibilidade, ajudam a separar as duas coisas."
+  - termo: "Poder estatístico e efeito mínimo detectável"
+    etapas: ["05"]
+    explicacao: "Chance de detectar um efeito que existe de verdade. Com poucas pessoas, só efeitos grandes são detectáveis; o efeito mínimo detectável (em g) informa o tamanho que o estudo consegue ver com 80% de poder. Não encontrar efeito com pouco poder não significa que o efeito não exista."
+  - termo: "Nível de evidência: descoberta x replicado"
+    etapas: ["05"]
+    explicacao: "Decisão do usuário (07/10/2026): nenhum gene é descartado por aparecer em poucos estudos. 'Descoberta' = resultado de um só estudo do tecido (ex.: todo o fígado, ou genes que só uma plataforma mede); é uma pista, ainda sem confirmação independente. 'Replicado' = resultado combinado de 2 ou mais estudos do tecido; mostra também quantos estudos concordam no sentido do efeito. O FDR é calculado separadamente em cada nível."
+  - termo: "Lote de processamento (data de leitura)"
+    etapas: ["04", "05"]
+    explicacao: "Amostras processadas ou lidas no scanner em dias diferentes recebem pequenas diferenças técnicas em todos os genes. Se os controles foram lidos num período e os DM2 em outro (lote confundido com o grupo), o 'efeito do DM2' mistura doença e lote e não pode ser separado. A data de leitura fica gravada nos arquivos dos arrays (CEL, Agilent) e é usada para medir a confusão (etapa 04) e como covariável no modelo (etapa 05)."
+  - termo: "V de Cramér (confusão entre lote e grupo)"
+    etapas: ["04", "05"]
+    explicacao: "Mede, de 0 a 1, o quanto o lote 'adivinha' o grupo (DM2 ou sem diabetes): 0 = lotes com mistura equilibrada dos dois grupos; 1 = cada lote tem um grupo só. Junto com a fração de amostras em lotes que têm os dois grupos, define a regra: V > 0,6 e menos de 50% em lotes mistos = estudo só na sensibilidade."
+  - termo: "Genes codificantes de proteína"
+    etapas: ["05"]
+    explicacao: "Genes cujo RNA é traduzido em proteína (cerca de 20 mil). Algumas plataformas medem também RNAs pequenos não codificantes (snoRNA, snRNA, miRNA), que outras não medem e que são sensíveis a efeitos técnicos; restringir aos codificantes evita esses artefatos e torna os estudos mais comparáveis."
+  - termo: "Sobreajuste (overfitting) e graus de liberdade"
+    etapas: ["05"]
+    explicacao: "Graus de liberdade residuais = número de amostras menos o número de parâmetros do modelo. Cada covariável (cada lote, o IMC, cada escore celular) gasta um. Com poucas amostras e muitas covariáveis, o modelo se ajusta ao acaso, a variância fica subestimada e os p-valores ficam artificialmente pequenos. Regra adotada: covariável só entra se sobrarem pelo menos 6 graus de liberdade. Exemplo real: 5 lotes em 11 mulheres do GSE25462 geravam 113 genes 'significativos' no músculo, que sumiram com a regra."
+  - termo: "Hartung-Knapp (meta-análise com poucos estudos)"
+    etapas: ["05"]
+    explicacao: "Ajuste do teste da meta-análise de efeitos aleatórios para quando há poucos estudos (2 a 4, o nosso caso). Em vez de supor que a incerteza do efeito combinado é conhecida, estima-a pela dispersão real entre os estudos e usa a distribuição t com k − 1 graus de liberdade. Dá intervalos mais largos e p-valores mais honestos que o DerSimonian-Laird puro, que com poucos estudos é otimista. Usamos a versão modificada, que nunca fica menos conservadora que o DerSimonian-Laird."
+  - termo: "Inflação genômica (λ) e fração de p < 0,05"
+    etapas: ["05"]
+    explicacao: "Checagens de sanidade de um estudo. Se não houver efeito nenhum, cerca de 5% dos genes têm p < 0,05 e λ (mediana das estatísticas observadas dividida pela esperada) fica perto de 1. Valores muito acima (ex.: 21% dos genes com p < 0,05 no GSE189005) indicam um efeito forte e difuso, que costuma ser técnico (lote, composição celular) e não biológico."
+  - termo: "Balanço de idade e IMC (confusão)"
+    etapas: ["05"]
+    explicacao: "Se as mulheres com DM2 de um estudo são mais velhas ou mais obesas que as controles, o efeito estimado mistura DM2 com idade (na faixa de 40–60, com o estado menopausal) ou com obesidade. A tabela de balanço mostra essas diferenças por estudo, e as sensibilidades (idade como covariável; sem estudos com diferença de idade > 5 anos; IMC) mostram se o resultado muda."
+  - termo: "WGCNA (rede de coexpressão)"
+    etapas: ["06"]
+    explicacao: "Weighted Gene Co-expression Network Analysis: agrupa genes cuja expressão sobe e desce junta entre as amostras. Cada grupo é um módulo, que costuma corresponder a um processo biológico ou a um tipo celular. Testar algumas dezenas de módulos, em vez de ~18 mil genes, reduz muito o número de testes. A rede não usa o status de DM2 para ser construída (é não supervisionada)."
+  - termo: "Módulo, eigengene e kME (genes centrais)"
+    etapas: ["06", "07", "08"]
+    explicacao: "Módulo = grupo de genes coexpressos. Eigengene = o perfil resumo do módulo em cada amostra (primeiro componente principal dos genes do módulo); é ele que se compara entre DM2 e sem diabetes. kME = correlação de cada gene com o eigengene do seu módulo: genes com kME alto são os 'centrais' (hubs), os que melhor representam o módulo."
+  - termo: "Limiar de potência e rede livre de escala"
+    etapas: ["06"]
+    explicacao: "A WGCNA eleva as correlações entre genes a uma potência (soft threshold) para realçar as ligações fortes e apagar as fracas. A potência é escolhida para que a rede tenha a forma típica de redes biológicas, com poucos genes muito conectados e muitos pouco conectados (rede 'livre de escala')."
+  - termo: "Rede de consenso"
+    etapas: ["06"]
+    explicacao: "Rede construída com vários estudos ao mesmo tempo, que guarda só as ligações entre genes presentes em todos eles. Assim os módulos não dependem de um estudo, de uma plataforma ou de um lote específico."
+  - termo: "Preservação de módulo (Zsummary)"
+    etapas: ["06"]
+    explicacao: "Mede se um módulo encontrado num conjunto de dados se repete em outro (mesmos genes continuam coexpressos). Zsummary > 10 = fortemente preservado; 2 a 10 = moderadamente; < 2 = não preservado. Módulos não preservados não são generalizáveis e não seguem na análise."
+  - termo: "Análise de sobre-representação (ORA)"
+    etapas: ["07"]
+    explicacao: "Pergunta se uma lista de genes (ex.: os de um módulo) tem mais genes de uma via do que o esperado por acaso, comparando com o universo de genes medidos. Serve para descrever o que o módulo representa, não para testar o efeito do DM2."
+  - termo: "GSEA pré-ordenada e NES"
+    etapas: ["07"]
+    explicacao: "Gene Set Enrichment Analysis: ordena todos os genes pelo efeito do DM2 (do mais aumentado ao mais diminuído) e verifica se os genes de uma via se concentram no topo ou no fim da lista. NES (escore de enriquecimento normalizado) > 0 = via aumentada no DM2; < 0 = diminuída. Usa a lista completa, por isso não depende da escolha dos módulos. Limitação séria: trata genes da mesma via como independentes, mas eles variam juntos; aqui isso inflou os resultados (até 38 de 50 vias Hallmark com FDR < 0,05 em estudos com 2 × 6 mulheres). Por isso a significância das vias vem do escore por amostra com Hartung-Knapp, e a GSEA é usada só para o sentido (NES) e os genes que puxam a via (leading edge)."
+  - termo: "Coleções de vias: Hallmark, Reactome e GO"
+    etapas: ["07"]
+    explicacao: "Hallmark: 50 conjuntos resumidos e pouco redundantes. Reactome: ~1.600 vias bioquímicas curadas. GO (Gene Ontology, processos biológicos): milhares de termos, muito redundantes entre si. Quanto mais conjuntos, mais testes e maior a correção de FDR; o FDR é calculado dentro de cada coleção."
+  - termo: "Análise exploratória (critérios da opção B)"
+    etapas: ["06", "07", "08"]
+    explicacao: "Decisão do usuário (07/10/2026): se nenhum módulo passar do FDR, a análise segue com critérios declarados antes (p < 0,05 na meta-análise e mesmo sentido do efeito em todos os estudos do tecido). Tudo o que sai desse caminho é hipótese para estudos futuros, não resultado confirmado, e assim fica rotulado."
+  - termo: "STRING (interações entre proteínas)"
+    etapas: ["08"]
+    explicacao: "Banco de interações conhecidas ou previstas entre proteínas humanas (experimentos, bancos curados, coexpressão, literatura), cada uma com um escore de confiança de 0 a 1.000. Usado para ligar genes-chave de tecidos diferentes por conhecimento prévio, já que nenhuma pessoa tem vários tecidos no mesmo estudo."
+  - termo: "OmniPath (ligante–receptor, comunicação entre órgãos)"
+    etapas: ["08"]
+    explicacao: "Banco de interações entre proteínas secretadas (ligantes, como hormônios e citocinas) e seus receptores. Permite propor comunicação entre órgãos: um ligante alterado no DM2 num tecido (ex.: tecido adiposo) cujo receptor está alterado em outro (ex.: músculo ou ilhotas)."
+  - termo: "Painel de genes de interesse"
+    etapas: ["08"]
+    explicacao: "Lista final de genes candidatos, pontuados por critérios definidos antes: efeito do DM2 replicado nos estudos, gene central de módulo associado ao DM2, presença em via forte (significativa ou sugestiva) ou convergente, ligação com candidato de outro tecido com 2+ estudos (STRING ou ligante–receptor) e robustez a tirar um estudo (sentido mantido e p < 0,10). Critérios endurecidos em 08/10/2026 porque, na versão anterior, quase todo candidato ganhava 3 pontos automaticamente. Com o poder atual, é uma lista de hipóteses para validação, não um painel diagnóstico."
+  - termo: "Stouffer ponderado (combinação de evidências)"
+    etapas: ["05", "06", "07"]
+    explicacao: "Soma a evidência dos estudos: cada p vira um escore z com o sinal do efeito, ponderado pela raiz do número de pessoas do estudo. Detecta efeitos pequenos e coerentes espalhados pelos estudos, mas supõe que todos medem o mesmo efeito; com estudos heterogêneos pode ser otimista. Usado ao lado do Hartung-Knapp, como evidência exploratória (pedido do usuário, 08/10/2026)."
+  - termo: "rOP (efeito em pelo menos 2 estudos)"
+    etapas: ["05", "06", "07"]
+    explicacao: "Teste do r-ésimo menor p (r = 2): pergunta se o efeito aparece em pelo menos 2 estudos do tecido, mesmo que não em todos. Usa o segundo menor p entre os k estudos e só vale se os 2 estudos mais fortes têm o mesmo sentido. Calibração (revisão de 08/10/2026): a hipótese nula é 'no máximo 1 estudo tem efeito', então o p é calculado no pior caso, com um estudo já com efeito: p = 1 − (1 − p₂)^(k−1). A versão anterior supunha todos os estudos sem efeito e era otimista. Adequado a dados humanos heterogêneos (confusão, N pequeno), em que um efeito real pode não aparecer em todos os estudos. Base do nível 'exploratório (≥ 2 estudos)'."
+  - termo: "Heterogeneidade (Cochran Q)"
+    etapas: ["05", "06", "07"]
+    explicacao: "Teste de que os estudos discordam mais do que o acaso explicaria. p pequeno = efeito diferente entre estudos (populações, tecidos, protocolos), situação em que a média combinada deve ser lida com cautela e o rOP ajuda a ver em quais estudos o efeito aparece."
+  - termo: "Influência de cada estudo"
+    etapas: ["05", "06"]
+    explicacao: "Para cada resultado, o peso de cada estudo na meta-análise (%), o efeito e o p sem aquele estudo, e se a retirada inverte o sentido ou muda a conclusão (p < 0,05). Mostra quando um resultado depende de um único estudo."
+  - termo: "Rede de consenso em pelo menos 2 estudos"
+    etapas: ["06"]
+    explicacao: "Pedido do usuário (08/10/2026): a ligação entre dois genes entra na rede se for forte em pelo menos 2 estudos de construção, e não em todos (quantil (n − 2)/(n − 1) entre os n estudos; com 2 estudos continua sendo nos dois). O módulo conta como preservado quando se repete (Zsummary ≥ 2) em pelo menos 2 estudos, contando o de referência."
+  - termo: "Níveis exploratórios"
+    etapas: ["06", "07", "08"]
+    explicacao: "Quando nada passa do FDR: 'exploratório' = p < 0,05 (Hartung-Knapp) e todos os estudos (2+) no mesmo sentido; 'exploratório (≥ 2 estudos)' = rOP com FDR < 0,10 e os 2 estudos mais fortes no mesmo sentido; 'exploratório (1 estudo)' = tecido com um só estudo (fígado), p < 0,05 (pedido do usuário, 08/10/2026). 'exploratório (efeito fixo, 2 estudos)' = em tecidos com exatamente 2 estudos (músculo, sangue), p < 0,05 pelo efeito fixo e os 2 estudos no mesmo sentido (decisão do usuário, 08/10/2026). Todos são hipóteses para estudos futuros."
+  - termo: "Testes de sanidade das saídas"
+    etapas: ["sanidade"]
+    explicacao: "Verificações automáticas de todas as saídas (etapas 02 a 08) que procuram valores que não deveriam existir, por erro de código ou por confusão nos dados: NA em coluna obrigatória, infinitos, p fora de (0, 1], FDR menor que p, rótulos fora do conjunto, IDs duplicados, colunas vazias ou constantes, incoerências entre colunas. ERRO = resultado não confiável (a execução falha); ALERTA = conferir."
+  - termo: "Genes resgatados (detectados) por amostra"
+    etapas: ["sanidade"]
+    explicacao: "Quantos genes de fato aparecem expressos numa amostra, e não só medidos. Em RNA-seq: CPM ≥ 1. Em arrays: acima do 'fundo', medido pelos genes do cromossomo Y nas mulheres (genes que nelas não deveriam ter sinal; o percentil 95 deles é o nível do ruído). Amostras ou estudos com muito menos genes detectados que os demais têm dado de pior qualidade ou outra plataforma, o que reduz a comparabilidade."
+  - termo: "Índice de Jaccard (genes em comum)"
+    etapas: ["sanidade"]
+    explicacao: "Genes em comum entre dois estudos divididos pelos genes de qualquer um dos dois (0 = nenhum em comum; 1 = idênticos). Mede se as plataformas medem o mesmo conjunto de genes; valores baixos significam que a meta-análise de muitos genes conta com poucos estudos."
+  - termo: "Correlação de perfis entre estudos"
+    etapas: ["sanidade"]
+    explicacao: "Correlação de Spearman entre os perfis medianos de expressão (postos dos genes) de dois estudos. Estudos do mesmo tecido devem se parecer mais entre si do que com os de outros tecidos; se um estudo se parece mais com outro tecido, há suspeita de rótulo errado ou de amostra muito diferente (ex.: ilhota pura x pâncreas)."
+  - termo: "Correlação do efeito do DM2 entre estudos"
+    etapas: ["sanidade"]
+    explicacao: "Correlação dos g (DM2 x sem diabetes) gene a gene entre dois estudos. Positiva = os estudos tendem a ver o mesmo sentido; perto de 0 = pouca concordância global, comum em dados humanos com N pequeno e muitos fatores de confusão. Entre tecidos, mostra se há um componente sistêmico comum do DM2."
+  - termo: "Teste de permutação dos rótulos (controle negativo)"
+    etapas: ["sanidade"]
+    explicacao: "Os rótulos DM2/sem diabetes são sorteados entre as mulheres do estudo e o modelo é refeito várias vezes. Sem efeito real, ~5% dos genes devem dar p < 0,05; se der muito mais, o modelo está inflado. Também mostra se o sinal observado do DM2 é maior que o do acaso (p empírico)."
+  - termo: "Conjuntos de genes aleatórios"
+    etapas: ["sanidade"]
+    explicacao: "Conjuntos sorteados com os mesmos tamanhos das vias Hallmark, testados como se fossem vias. Se muitos dão p < 0,05, o escore de via capta um efeito geral (ex.: composição celular, qualidade de RNA) e as vias significativas devem ser lidas contra essa linha de base."
+  - termo: "Diferença média padronizada (SMD)"
+    etapas: ["sanidade"]
+    explicacao: "Diferença entre as médias de DM2 e sem diabetes dividida pelo desvio-padrão, para idade, IMC e composição celular. |SMD| > 0,8 é um desbalanço grande: parte do 'efeito do DM2' pode ser dessa variável. Com 2 a 5 pessoas por grupo o valor é instável, mas aponta onde olhar."
+  - termo: "Controles positivos e identidade do tecido"
+    etapas: ["sanidade"]
+    explicacao: "Resultados que sabemos de antemão: nas mulheres, XIST alto e genes do Y baixos; os marcadores do próprio tecido (ex.: INS e GCG nas ilhotas, ALB no fígado) entre os mais expressos; genes que caem no DM2 em estudos grandes de ilhotas (SLC2A2, ARG2, IAPP, PPP1R1A) com g negativo. Falhas indicam rótulo trocado, tecido errado ou sinal invertido."
+  - termo: "Conferência independente (pacote metafor)"
+    etapas: ["sanidade"]
+    explicacao: "A meta-análise de genes sorteados é refeita com o metafor, pacote de referência em meta-análise (DerSimonian-Laird e Hartung-Knapp modificado, test = 'adhoc'). Diferenças indicam erro na nossa implementação."
+  - termo: "Símbolos corrompidos e aliases"
+    etapas: ["sanidade"]
+    explicacao: "O Excel converte nomes de genes em datas (SEPT1 → 1-Sep, MARCH1 → 1-Mar) e matrizes antigas usam nomes desatualizados (aliases). Esses genes se perdem ao cruzar estudos ou no filtro de genes codificantes."
+  - termo: "Doador duplicado (correlação centrada)"
+    etapas: ["sanidade"]
+    explicacao: "Depois de tirar a média de cada gene, perfis de pessoas diferentes quase não se correlacionam; correlação > 0,9 entre duas amostras sugere a mesma pessoa contada duas vezes (no mesmo estudo ou em estudos que reaproveitam amostras), o que infla a replicação."
+  - termo: "Saída desatualizada"
+    etapas: ["sanidade"]
+    explicacao: "Arquivo de uma etapa mais velho que os arquivos ou a configuração de que depende: foi gerado antes de uma mudança e pode não refleti-la. Corrige-se rodando de novo a etapa (e as seguintes)."
+  - termo: "Escore de via competitivo"
+    etapas: ["05", "07", "sanidade"]
+    explicacao: "O escore de cada via numa amostra é descontado da média de todos os genes da amostra. Pergunta: 'esta via muda mais que o resto do genoma?'. Adotado em 08/10/2026 porque, em 3 estudos (GSE221156, GSE18732, GSE25462), o DM2 deslocava quase todos os genes no mesmo sentido e 49-80% dos conjuntos de genes sorteados davam p < 0,05; sem a correção, qualquer via parecia alterada."
+  - termo: "Efeito fixo com 2 estudos"
+    etapas: ["05", "06", "07", "08"]
+    explicacao: "Com só 2 estudos, o Hartung-Knapp compara o efeito combinado com uma distribuição t de 1 grau de liberdade: para dar p < 0,05 a razão efeito/erro precisaria passar de 12,7, o que nenhum gene alcança. Por decisão do usuário (08/10/2026), no músculo e no sangue o nível exploratório usa o modelo de efeito fixo (média ponderada pelo inverso da variância, supondo o mesmo efeito nos 2 estudos), adequado quando a heterogeneidade é baixa (I² mediano 0). O Hartung-Knapp continua sendo o teste principal (FDR)."
+  - termo: "Genes de resposta imediata (possível artefato de coleta)"
+    etapas: ["05", "06", "08"]
+    explicacao: "Genes como FOS, JUN, EGR1, BTG2, KLF9 e PPP1R15A, que sobem em minutos quando o tecido fica sem circulação ou é manipulado antes do congelamento (tempo de cirurgia, dissociação). Diferenças no tempo de coleta entre DM2 e controles podem gerar falso 'efeito do DM2'. Ficam na análise e são marcados (coluna resposta_imediata) para a discussão posterior (decisão do usuário, 08/10/2026)."
+  - termo: "Pseudo-bulk por tipo celular"
+    etapas: ["09"]
+    explicacao: "Em vez de somar todas as células de uma pessoa (pseudo-bulk total), somam-se só as células de um tipo (por exemplo, só as células estreladas). Assim o efeito do DM2 é medido DENTRO daquele tipo, sem ser afetado por mudanças na proporção de células."
+  - termo: "Composição celular x expressão"
+    etapas: ["09"]
+    explicacao: "Num tecido inteiro (array ou pseudo-bulk total), um gene pode parecer 'maior no DM2' por dois motivos: as células passaram a expressá-lo mais (expressão) ou há mais células do tipo que o expressa (composição). A célula única permite separar os dois."
+  - termo: "Deconvolução (NNLS)"
+    etapas: ["09"]
+    explicacao: "Estimativa da proporção de cada tipo celular numa amostra de tecido inteiro, explicando a expressão da amostra como mistura dos perfis de cada tipo (referência tirada da célula única). NNLS = mínimos quadrados não negativos (nenhuma proporção pode ser negativa). O método foi testado no próprio estudo de célula única, onde a proporção verdadeira é conhecida."
+  - termo: "Células estreladas pancreáticas"
+    etapas: ["09"]
+    explicacao: "Células do estroma da ilhota, parecidas com fibroblastos. Quando ativadas (por exemplo, por hiperglicemia ou inflamação), produzem matriz extracelular e fatores como THBS2, LTBP1, PDGFRA e IL6, e participam da fibrose da ilhota no DM2."
+  - termo: "Curva ROC e AUC"
+    etapas: ["10"]
+    explicacao: "A curva ROC mostra, para cada limiar de um escore, quantos casos são reconhecidos (sensibilidade) contra quantos controles são confundidos com casos (1 − especificidade). A AUC (área sob a curva) é a probabilidade de uma pessoa com DM2 sorteada ter escore maior que uma sem diabetes sorteada: 0,5 = acaso, 1 = separação perfeita. Com 2 × 2 pessoas só existem 4 pares, e uma AUC de 1 acontece por acaso em 1 de 6 vezes."
+  - termo: "Deixar um estudo de fora (validação)"
+    etapas: ["10"]
+    explicacao: "Em cada rodada um estudo é escondido; o módulo, os genes e o sentido de cada gene são escolhidos só com os outros estudos, e o escore é avaliado no estudo escondido. Assim cada estudo é testado com genes que ele não ajudou a escolher. É o oposto da 'AUC circular', em que os genes são escolhidos olhando as mesmas pessoas em que são testados (otimista por construção)."
+  - termo: "Escore de sentido fixo"
+    etapas: ["10"]
+    explicacao: "Média dos z dos genes que sobem no DM2 menos a média dos z dos que descem, com o sentido de cada gene definido no treino. Não tem pesos ajustados aos dados do estudo testado, o que evita sobreajuste com poucas pessoas."
+  - termo: "Validação externa"
+    etapas: ["10"]
+    explicacao: "Teste do escore em estudos que não participaram da escolha do módulo e dos genes (aqui, os que ficaram só na sensibilidade: GSE156993, GSE189005, GSE21340, e o GSE15653 no fígado). Cada um tem uma limitação (comorbidades não pareadas, lote confundido, N pequeno), que deve ser lida junto com a AUC. O GSE156993 e o GSE15653 ajudaram a construir a rede de coexpressão (sem o status de DM2); a etapa 10d repete o teste com a rede feita sem eles."
+  - termo: "Avaliação condicionada à rede (transdutiva)"
+    etapas: ["10"]
+    explicacao: "Quando a rede de coexpressão que define os módulos é construída uma vez com todos os estudos, inclusive o que depois é testado, a curva ROC não é uma validação totalmente independente: o estudo testado ajudou a decidir quais módulos existem, embora sem o status de DM2 (não há vazamento do rótulo). Para a validação independente, a rede precisa ser refeita em cada rodada só com o treino (etapa 10d)."
+  - termo: "Fígado em dois níveis (descoberta e replicação)"
+    etapas: ["05", "06", "07", "08", "10"]
+    explicacao: "Decisão do usuário (09/10/2026): quando um estudo é muito maior que o outro (GSE130991, 128 x 58 mulheres; GSE15653, 3 x 4), a regra 'mesmo sentido em todos os estudos' deixa o estudo pequeno vetar o grande. No fígado, o estudo grande vira a análise principal (descoberta de 1 estudo) e o pequeno é usado como replicação, mostrada à parte: para cada módulo, via e gene selecionado, mede-se se o efeito tem o mesmo sentido no estudo pequeno (acaso = 50%)."
+  - termo: "p empírico (calibração por conjuntos sorteados)"
+    etapas: ["07", "08", "sanidade"]
+    explicacao: "Em vez de confiar só no p da fórmula, o mesmo teste é aplicado a milhares de conjuntos de genes sorteados, do mesmo tamanho das vias reais. O p empírico de uma via é a fração dos sorteados que deram resultado tão forte quanto ela; o workflow usa o maior entre ele e o p da fórmula, para só corrigir inflação. Se o DM2 desloca quase todos os genes (por composição celular, obesidade ou remédio), muitos sorteados também 'dão significativo', e o p empírico corrige isso. Adotado em 10/10/2026 depois que, no GSE130991, 18% dos conjuntos sorteados davam p < 0,05."

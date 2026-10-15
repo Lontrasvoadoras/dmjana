@@ -1,0 +1,77 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 01: busca sistemática no GEO
+# Pergunta do workflow: efeito do DM2 em mulheres de 40-60 anos (proxy da transição
+# menopausal), só com bancos que tenham essas mulheres. A busca NÃO consegue filtrar idade
+# nem sexo (o GEO não indexa isso): ela encontra estudos de DM2 com controles nos tecidos de
+# interesse; idade e sexo por amostra são verificados na etapa 02 (metadados).
+# Decisões do usuário (06/10/2026): tecidos = 5 do projeto + tecidos ligados à menopausa;
+# condição = só DM2 com controles; código escrito do zero.
+# Validação da 1ª execução (06/10/2026, aprovada pelo usuário): (1) termos específicos de DM2
+# acrescentados, mantendo "diabetic"; (2) estudos de tecido fora do escopo saem pelo título só
+# quando o título não cita também um tecido de interesse; (3) títulos com diabetes tipo 1 seguem
+# para a etapa 02, que separa as amostras de tipo 2. Etapa 01 APROVADA em 06/10/2026 (o usuário
+# seguiu para a etapa 02), incluindo a exclusão sempre de câncer/carcinoma/tumor/melanoma.
+# Auditoria das exclusões (06/10/2026, pedida pelo usuário depois do GSE200044 excluído por "ATAC"
+# num título "multiome (ATAC and RNA)"); correções aprovadas pelo usuário:
+#  (a) termos de outro tipo de dado (ATAC, metilação, miRNA, lncRNA...) mandam para REVISÃO, não
+#      excluem: toda série do catálogo já é perfil de expressão no GEO;
+#  (b) "synthetic construct" e vírus não contam como espécie (vêm de sondas de controle);
+#  (c) série humana com parte em outra espécie vai para REVISÃO: a etapa 02 conta só amostras humanas;
+#  (d) termos de espécie casam só como palavra exata ("rates" casava com "rat");
+#  (e) mínimo de amostras 8 -> 4 (coerente com 2 doadoras DM2 + 2 ND na etapa 02).
+# A busca de 06/10/2026 foi mantida; só a triagem foi refeita (run_01_busca.R, NOVA_BUSCA=FALSE).
+# =============================================================================
+versao: 1
+data_decisoes: "2026-10-06"
+
+busca:
+  base: "gds"                         # E-utilities, banco GEO DataSets (séries = entrytype gse)
+  organismo: "Homo sapiens"
+  tipos_dado: ["Expression profiling by array", "Expression profiling by high throughput sequencing"]
+  data_publicacao_min: "2000/01/01"
+  max_resultados_por_consulta: 2000
+  pausa_seg: 0.4                      # limite do NCBI sem chave de API (3 por segundo)
+  # condição: DM2 (sem termos de diabetes tipo 1 ou gestacional; esses estudos saem na triagem)
+  termos_doenca: ["type 2 diabetes", "type 2 diabetic", "diabetes mellitus type 2", "type II diabetes", "T2D", "T2DM",
+                  "non-insulin-dependent diabetes", "NIDDM", "diabetic"]
+
+# Tecidos (nome interno -> termos de busca). Os 5 do projeto e os ligados à menopausa.
+tecidos:
+  ilhotas:   ["pancreatic islet", "islets", "beta cells", "beta-cells", "pancreas"]
+  musculo:   ["skeletal muscle", "vastus lateralis", "muscle biopsy"]
+  adiposo:   ["adipose", "subcutaneous fat", "visceral fat", "adipocytes"]
+  figado:    ["liver", "hepatic"]
+  sangue:    ["peripheral blood", "whole blood", "PBMC", "leukocytes", "monocytes"]
+  osso:      ["bone", "osteoblast", "bone marrow"]
+  endometrio_ovario: ["endometrium", "endometrial", "ovary", "ovarian", "uterus"]
+  mama:      ["breast", "mammary"]
+  vasos:     ["artery", "arterial", "aorta", "endothelial", "vascular"]
+
+# Triagem automática (pelo TÍTULO, com limites de palavra; o resumo não é usado porque estudos
+# humanos citam camundongos e linhagens). Cada exclusão grava o motivo.
+triagem:
+  n_min_amostras: 4                  # 2 DM2 + 2 ND (auditoria de 06/10/2026; antes 8)
+  n_max_amostras: 2000               # acima: provável compilação ou célula única -> revisar
+  # espécies não humanas no título: excluem, mas casam só como palavra exata (sem plural tolerante)
+  especies_titulo: ["mice", "mouse", "murine", "rat", "rats", "zebrafish", "porcine", "bovine"]
+  # "espécies" do GEO que não são amostras (sondas de controle da plataforma): ignoradas
+  especies_ignorar: ["synthetic construct", "virus"]
+  excluir_titulo: ["cell line", "in vitro", "iPSC", "induced pluripotent", "stem cell-derived", "organoid",
+                   "knockdown", "knockout", "siRNA", "overexpression",
+                   "gestational",
+                   # tecido tumoral não serve à pergunta (tecido normal): exclui sempre (revisão de 06/10/2026)
+                   "cancer", "carcinoma", "tumor", "tumour", "melanoma", "neoplasm"]
+  # tecido fora do escopo: exclui o título que cita um destes E nenhum termo de tecido de interesse
+  # (ex.: "diabetic retinopathy in retinal endothelium" sai; "PBMC from diabetic nephropathy" fica)
+  tecido_fora_escopo: ["retina", "retinal", "retinopathy", "cornea", "kidney", "renal", "glomerular", "glomeruli",
+                       "podocyte", "nephropathy", "wound", "ulcer", "foot", "skin", "keratinocyte", "fibroblast",
+                       "brain", "neuron", "neuronal"]
+  # termos de tecido genéricos que NÃO salvam um título fora do escopo (ex.: "glomerular endothelial")
+  tecido_generico: ["endothelial", "vascular", "arterial"]
+  # outro tipo de dado no título: REVISÃO (a série também é perfil de expressão no GEO; ex.: multiome
+  # ATAC + RNA, metilação + transcriptoma). A etapa 02 lê os metadados; a etapa de dados confirma a expressão.
+  outro_tipo_dado_titulo: ["methylation", "microRNA", "miRNA", "lncRNA", "ChIP", "ATAC", "proteom"]
+  # termos que mandam para revisão manual em vez de excluir (podem ter desenho por doador)
+  revisar_titulo: ["single-cell", "single cell", "single-nucleus", "single nucleus", "scRNA", "snRNA"]
+  # termos sensíveis a maiúsculas (evita "ChIP" casar com "BeadChip")
+  sensivel_maiusculas: ["ChIP", "ATAC"]

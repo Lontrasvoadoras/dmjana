@@ -1,0 +1,64 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 04: obtenção e processamento dos dados de expressão
+# Intenção validada pelo usuário em 06/10/2026 (docs/intencao_04_processamento.docx), decisões D1-D7:
+#  D1 todas as amostras aptas do estudo (todas as idades, os dois sexos); a restrição a mulheres de
+#     40-60 é feita no modelo da etapa 05
+#  D2 dados brutos sempre que existirem; matriz do autor só sem brutos (registrada)
+#  D3 célula/núcleo único: pseudo-bulk de todas as células por doador
+#  D4 GSE316126 (NanoString, painel): processado, mas só para análise dirigida aos genes do painel
+#  D5 GSE189005/GSE189007: mesmos arquivos de mRNA; fica o GSE189005 (input/exclusoes.csv)
+#  D6 sexo genético discordante sai; estudo com > 20% de discordância só na sensibilidade
+#  D7 amostra com conectividade z < -3 sai
+# =============================================================================
+versao: 1
+data: "2026-10-06"
+
+cache: "D:/dm_jana_cache/menopausa"     # fora do OneDrive (arquivos brutos grandes)
+timeout_seg: 3600
+pausa_seg: 0.4
+
+# Tipo de processamento por estudo, confirmado nos arquivos do GEO em 06/10/2026
+#  cel           : arquivos CEL de cada amostra (GSM) -> RMA (oligo); anotação pelo pacote .db da plataforma
+#  illumina_bruto: matriz Illumina não normalizada -> neqc (limma), com p de detecção
+#  agilent_bruto : arquivos Agilent de uma cor de cada GSM -> normexp + quantis (limma)
+#  contagens     : contagens brutas por gene -> filtro de expressão, TMM, log2-CPM (edgeR)
+#  contagens_norm: contagens já normalizadas pelo autor -> log2(x + 1)
+#  pseudobulk_csv: contagens por célula (colunas = GSM de cada célula) -> soma por doador -> como contagens
+#  pseudobulk_h5ad: contagens por célula em h5ad (CELLxGENE, com doador por célula) -> soma por doador
+#  series_matrix : matriz do autor publicada no GEO -> log2 (se linear) + quantis
+#  nanostring    : arquivos RCC de cada GSM -> controles positivos + genes de referência, log2
+estudos:
+  GSE29226:  {tipo: illumina_bruto, arquivo: "GSE29226_non-normalized.txt.gz"}
+  GSE200678: {tipo: contagens, arquivo: "GSE200678_Kallisto_visceral_AT_tissue_count.txt.gz"}
+  GSE133666: {tipo: cel, pacote_anotacao: hugene20sttranscriptcluster.db}
+  GSE198922: {tipo: contagens_norm, arquivo: "GSE198922_processed.data.csv.gz"}   # valores já normalizados pelo autor (decimais, ~CPM); sem contagens brutas no GEO
+  GSE15653:  {tipo: cel, pacote_anotacao: hgu133a.db}
+  GSE41762:  {tipo: cel, pacote_anotacao: hugene10sttranscriptcluster.db}
+  GSE221156: {tipo: pseudobulk_h5ad, arquivo: "D:/dm_jana_cache/cellxgene/GSE221156_integrado_464a2c70.h5ad"}
+  GSE76895:  {tipo: cel, pacote_anotacao: hgu133plus2.db}
+  GSE86469:  {tipo: pseudobulk_csv, arquivo: "GSE86469_GEO.islet.single.cell.processed.data.RSEM.raw.expected.counts.csv.gz"}
+  GSE18732:  {tipo: cel, pacote_anotacao: hgu133plus2.db}
+  GSE21340:  {tipo: cel, pacote_anotacao: hu6800.db}
+  GSE25462:  {tipo: cel, pacote_anotacao: hgu133plus2.db}
+  GSE184050: {tipo: contagens_norm, arquivo: "GSE184050_CCHC_T2D_DEseq2_normalized_count.txt.gz"}
+  GSE156993: {tipo: cel, pacote_anotacao: hgu133plus2.db}
+  GSE189005: {tipo: cel, pacote_anotacao: clariomdhumantranscriptcluster.db}
+  GSE23561:  {tipo: series_matrix}
+  GSE316126: {tipo: nanostring, uso: "dirigido"}
+  GSE249102: {tipo: agilent_bruto}
+  # resgatados entre os "sem status" (decisão do usuário, 09/10/2026; status por curadoria em input/curadoria.csv)
+  GSE130991: {tipo: series_matrix}   # fígado; CEL HTA 2.0 somam 21,9 GB e o RMA de centenas de arrays não cabe na memória: matriz do autor (registrada)
+  GSE250283: {tipo: illumina_bruto, arquivo: "GSE250283_non_normalized.txt.gz"}   # sangue; Illumina não normalizado, 2 plataformas
+  # GSE50244 EXCLUÍDO (input/exclusoes.csv, 09/10/2026): 67 de 89 doadores repetidos do GSE41762 (confirmados pela expressão, 12/10/2026); os 22 novos não têm mulher de 40-60 com DM2. Plano antigo: {tipo: contagens_norm, arquivo: GSE50244_Genes_counts_TMM_NormLength_atLeastMAF5_expressed.txt.gz, escala: cpm}
+
+qc:
+  sexo_discordancia_max: 0.20          # D6
+  conectividade_z_min: -3              # D7
+  genes_conectividade: 5000            # genes mais variáveis usados na conectividade
+  biblioteca_min: 1000000              # RNA-seq: contagens totais mínimas por amostra
+  celulas_min_por_doador: 20           # pseudo-bulk
+  min_amostras_conectividade: 6        # abaixo disso a conectividade não é calculada
+  # lote de processamento (data de leitura do array; decisão do usuário de 07/10/2026): estudo com
+  # confusão forte entre lote e grupo DM2/ND sai da análise principal (só sensibilidade)
+  lote_v_cramer_max: 0.60
+  lote_frac_mista_min: 0.50

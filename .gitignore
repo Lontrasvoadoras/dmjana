@@ -1,0 +1,28 @@
+# Documentos Word (não versionados)
+*.docx
+*.doc
+*.dotx
+*.docx#
+~$*
+# Dados baixados e cache (regenerados pelo pipeline; ~1,8 GB)
+cache/
+# Saídas do pipeline (regeneradas pelos scripts run_*.R; ~370 MB)
+output/
+# Registros de execução
+logs/
+omnipathr-log/
+# R
+.Rhistory
+.RData
+*.RData
+.Rproj.user/
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+# Scripts que geram os relatórios e documentos Word (mantidos só localmente)
+R/99_documentar.R
+atualizar_documentos.sh
+docs/intencao_*.R
+docs/relatorio_final.R
+docs/relatorio_workflow.R

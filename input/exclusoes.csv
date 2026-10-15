@@ -1,0 +1,7 @@
+gse,motivo,decisao
+GSE86468,"Mesmos 8 doadores (UNOS id) do GSE86469; usuário manteve GSE86469 (célula única, HPAP)",06/10/2026
+GSE38642,Repete doadores de Lund do GSE41762; usuário manteve GSE41762,06/10/2026
+GSE158055,DM2 vem de comorbidities: diabetes em pacientes com COVID-19 e os controles são pessoas sem COVID; contraste confundido com a COVID; excluído pelo usuário,06/10/2026
+GSE189007,"Os 45 CEL Clariom D (mRNA) são os mesmos arquivos do GSE189005 (mesmo nome e tamanho); as outras 85 amostras são arrays de miRNA e de promotores das mesmas pessoas. Mantido o GSE189005 (decisão D5 da etapa 04, aprovada pelo usuário; a contagem 14/12 que a motivou vinha de amostras de miRNA e promotores)",06/10/2026
+GSE50397,Mesmos 89 doadores do GSE50244 (array); fica o GSE50244 (RNA-seq) (usuário 09/10/2026),09/10/2026
+GSE50244,"67 dos 89 doadores são os mesmos do GSE41762 (Lund), confirmados pela expressão: o array GSE50397 dos mesmos doadores tem perfil centrado quase idêntico ao do GSE41762 (r 0,84-0,97; 2º melhor ~0,45) e sexo, IMC e HbA1c iguais (reavaliação de 12/10/2026; antes estimados em 79 só por sexo, idade +-1 e IMC, critério com coincidências ao acaso). Os 22 doadores novos têm só 3 mulheres de 40-60 (1 sem diabetes e 2 com HbA1c intermediária; nenhuma com DM2): estudo segue fora. Fica o GSE41762 (usuário 09/10/2026)",12/10/2026

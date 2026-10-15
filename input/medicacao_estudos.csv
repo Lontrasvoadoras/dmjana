@@ -1,0 +1,16 @@
+gse,tecido,uso,medicacao_por_pessoa,medicacao_no_artigo,implicacao,fonte
+GSE130991,figado,principal,"Sim (GEO): tratamento para diabetes sim/não (sem a classe do remédio); estatina com o nome","DM2 inclui quem está em antidiabético; coorte ABOS de obesidade grave","Sinal do fígado é em grande parte de DM2 tratada (etapa 08c)","PMID 31159817; 39653777; GEO"
+GSE15653,figado,replicação,Não,"Texto completo não disponível no PMC/Europe PMC",Desconhecida,PMID 19549744
+GSE18732,musculo,principal,"Sim (GEO): metformina e estatina (0/1)","DM2 sem remédio para diabetes por 1 semana antes da biópsia; demais remédios suspensos 24 h antes","Efeito agudo do remédio reduzido; controles em metformina já retirados; estatina por pessoa ainda não usada",PMID 20353613
+GSE25462,musculo,principal,Não,"DM2 sem remédio para diabetes (drug-naïve; só dieta e exercício)",Sem efeito de antidiabético,PMID 21393865; 27689005
+GSE41762,ilhotas,principal,Não,"Doadores de órgãos (Lund); texto completo não disponível",Desconhecida,PMID 23140642; 25298321
+GSE76895,ilhotas,principal,Não no GEO,"Pancreatectomizados (IMIDIA); DM2 definido por história clínica e tratamento com remédio para glicose; detalhes por paciente só no material suplementar (não verificado)",Desconhecida por pessoa,PMID 29185012; 30956117
+GSE221156,ilhotas,principal,Não,"Doadores; DM2 diagnosticado, pré-diabetes pela HbA1c; o texto não informa remédios",Desconhecida,PMID 41986506
+GSE86469,ilhotas,principal,Não,"Doadores; características na Tabela Suplementar S1 (não verificada)",Desconhecida,PMID 27864352
+GSE200678,adiposo,principal,Não,"Texto completo não disponível",Desconhecida,PMID 35995996
+GSE133666,adiposo,principal,Não,"Texto completo não disponível no PMC/Europe PMC",Desconhecida,PMID 33934108
+GSE198922,adiposo,principal,Não,"Sem artigo associado no GEO",Desconhecida,-
+GSE29226,adiposo,principal,Não,"O artigo não informa remédios das participantes",Desconhecida,PMID 23308243
+GSE184050,sangue,principal,Não,"O artigo não informa remédios",Desconhecida,PMID 35157052
+GSE250283,sangue,principal,Não,"Remédios coletados, mas não publicados por pessoa",Desconhecida,PMID 38706700
+GSE249102,sangue,principal,Não,"Estudo de tuberculose e diabetes; usados só os grupos DM2 e controle; remédios não informados",Desconhecida,PMID 38801463 (texto completo não disponível)

@@ -1,0 +1,62 @@
+campo,texto,contexto_tipo1,esperado,motivo
+status,type 2 diabetes,FALSE,T2D,termo explícito
+status,T2D,FALSE,T2D,sigla
+status,T2DM patient,FALSE,T2D,sigla
+status,non-diabetic,FALSE,ND,não pode virar DM2
+status,nondiabetic donor,FALSE,ND,não pode virar DM2
+status,Non-Diabetic,FALSE,ND,maiúsculas
+status,control,FALSE,ND,controle
+status,healthy control,FALSE,ND,controle
+status,well-controlled type 2 diabetes,FALSE,T2D,controlled não é controle
+status,poorly controlled T2D,FALSE,T2D,controlled não é controle
+status,type 1 diabetes,FALSE,EXCLUIR,outro tipo
+status,T1D,FALSE,EXCLUIR,outro tipo
+status,gestational diabetes,FALSE,EXCLUIR,outro tipo
+status,LADA,FALSE,EXCLUIR,outro tipo
+status,impaired glucose tolerance,FALSE,INTERMEDIARIO,pré-diabetes
+status,IGT,FALSE,INTERMEDIARIO,pré-diabetes
+status,prediabetes,FALSE,INTERMEDIARIO,pré-diabetes
+status,normal glucose tolerance,FALSE,ND,NGT
+status,NGT,FALSE,ND,NGT
+status,Control/type 2 diabetes,FALSE,AMBIGUO,dois rótulos no mesmo valor
+status,diabetic,FALSE,T2D,estudo só de DM2
+status,diabetic,TRUE,AMBIGUO,estudo cita tipo 1
+status,no diabetes,FALSE,ND,negação
+status,without T2D,FALSE,ND,negação
+status,obese non-diabetic,FALSE,ND,negação
+status,T2D with nephropathy,FALSE,T2D,complicação continua DM2
+status,normal,FALSE,ND,valor exato normal
+status,insulin sensitive,FALSE,ND,controle metabólico
+status,insulin resistant,FALSE,INTERMEDIARIO,sem diabetes declarado
+status,ND,FALSE,ND,sigla
+sexo,female,FALSE,F,
+sexo,Female,FALSE,F,
+sexo,F,FALSE,F,
+sexo,woman,FALSE,F,
+sexo,male,FALSE,M,
+sexo,M,FALSE,M,
+sexo,men,FALSE,M,
+idade,55,FALSE,55,
+idade,55 years,FALSE,55,
+idade,56.5,FALSE,56.5,
+idade,40-44,FALSE,42,faixa de 5 anos
+idade,40 to 44,FALSE,42,faixa de 5 anos
+idade,40-60,FALSE,NA,faixa larga
+idade,>60,FALSE,NA,limite sem valor
+idade,60 yrs,FALSE,60,
+status,type 2 diabetes (t2d): No,FALSE,ND,chave binária
+status,type 2 diabetes (t2d): Yes,FALSE,T2D,chave binária
+status,diabetes type: none,FALSE,ND,chave binária
+status,diabetes type: type2,FALSE,T2D,sem espaço
+status,diabetes: 1,FALSE,T2D,chave binária
+status,family history of diabetes: yes,FALSE,NA,história familiar não é status
+status,diabetes: type 1,FALSE,EXCLUIR,valor manda
+status,NIDDM,FALSE,T2D,sigla antiga
+sexo,Male/Female,FALSE,NA,pool de doadores com sexos diferentes
+sexo,Female/Female,FALSE,F,pool só de mulheres
+status,DM2,FALSE,T2D,sigla em português (GSE272294)
+status,group: DM2,FALSE,T2D,sigla em português
+status,CTRL,FALSE,ND,controle abreviado (GSE171352)
+status,PDM2,FALSE,NA,pré-DM2 abreviado não vira DM2
+sexo,FEM,FALSE,F,abreviação (auditoria)
+sexo,MAL,FALSE,M,abreviação (auditoria)

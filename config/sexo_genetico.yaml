@@ -1,0 +1,57 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 03: pré-análise de sexo genético
+# Pedido do usuário (06/10/2026): para os estudos que saíram na etapa 02 por não terem sexo
+# nos metadados, verificar se o sexo pode ser resgatado pela expressão de genes dos cromossomos
+# sexuais. Só entram os estudos em que o sexo é o ÚNICO obstáculo: têm idade e status, e teriam
+# doadoras de 40-60 com DM2 e sem diabetes suficientes se fossem mulheres.
+# =============================================================================
+versao: 1
+data: "2026-10-06"
+
+candidatos:
+  categorias: ["sem sexo", "sem sexo: candidato ao sexo genético"]
+  min_sem_sexo_por_grupo: 2          # amostras sem sexo, de 40-60, com DM2 e com ND (mesmo mínimo da etapa 02)
+
+dados:
+  pasta_cache: "cache/geo_matriz"
+  timeout_seg: 1800
+  # arrays: matriz normalizada publicada no GEO (series matrix) + anotação da plataforma (GPL)
+  # RNA-seq sem matriz no GEO: tabela suplementar (arquivo com contagens por gene)
+  padrao_suplementar: "(count|tpm|fpkm|rpkm|expression|matrix|raw).*[.](txt|tsv|csv|xlsx?)([.]gz)?$|[.]xlsx?$"
+
+genes:
+  cromossomo_y: ["RPS4Y1", "DDX3Y", "KDM5D", "UTY", "EIF1AY", "USP9Y", "ZFY", "NLGN4Y"]
+  cromossomo_x: ["XIST"]       # chaves "y"/"x" viram TRUE no YAML; por isso o nome longo
+  min_genes_y: 2                     # menos que isso: sexo genético não avaliável
+
+regras:
+  # (a) leitura dentro da amostra: percentil do gene entre todos os genes medidos na amostra
+  #     (independe da escala e funciona quando o estudo tem um só sexo).
+  #     F = XIST alto e Y não alto; M = Y alto e XIST não alto. O ruído de fundo dos arrays fica
+  #     entre os percentis 0,4 e 0,7 (piloto de 06/10/2026), por isso "não alto" não é "< 0,5".
+  #     Limiares conferidos na validação com sexo declarado (seção validacao).
+  xist_alto: 0.90
+  xist_nao_alto: 0.85
+  y_alto: 0.75
+  y_nao_alto: 0.70
+  # plataforma sem XIST (ex.: GPL6244, GPL10379): decide só a leitura (b), com dois grupos separados
+  # (acerto de 96,6-98,7% na validação de 06/10/2026); um só sexo não é decidível. Os limiares
+  # abaixo só descrevem a leitura (a) nesse caso, que não decide.
+  y_so_alto: 0.80
+  y_so_baixo: 0.65
+  # (b) leitura entre amostras: escore z(Y) - z(XIST), dois grupos por k-means
+  separacao_min: 4                   # distância entre os grupos em DP intragrupo (igual ao workflow_multi_estruturado)
+  # aceite: (a) e (b) concordam em pelo menos esta fração das amostras com sexo atribuído
+  concordancia_min: 0.90
+
+# Validação do método: mesma regra aplicada a estudos COM sexo declarado nas plataformas dos
+# candidatos; mede acerto e fração sem sexo atribuído antes de usar o resultado nos candidatos.
+validacao:
+  estudos_por_plataforma: 3
+  min_por_sexo: 5                    # estudos com pelo menos 5 F e 5 M declarados
+  acerto_min: 0.95                   # abaixo disso a plataforma não é usada para resgatar sexo
+
+# Decisão do usuário (06/10/2026): nenhum dos dois estudos que poderiam ser resgatados foi aceito.
+nao_aceitos:
+  GSE43950: "Tipo de diabetes não declarado; no artigo (Hazra et al., PLoS One 2013, PMID 24223881) o grupo do array tem 58,6 anos de idade e 41,8 anos de diabetes (início por volta dos 17 anos), perfil de diabetes tipo 1. A plataforma (GPL10379) não tem XIST nem estudo de validação, e a separação dos sexos foi pequena (4,8 DP)."
+  GSE128665: "Plataforma (GPL23126) sem estudo de validação com dados no GEO; a série não informa se as células mesoteliais foram cultivadas após o isolamento; só 2 doadoras com DM2 de 40-60 anos, e o grupo experimento mistura DM2 com resistência à insulina sem diabetes."

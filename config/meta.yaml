@@ -1,0 +1,128 @@
+# =============================================================================
+# workflow_dm_menopausa - ETAPA 05: efeito do DM2 por estudo e meta-análise por tecido
+# Intenção validada pelo usuário em 07/10/2026 (docs/intencao_05_meta.docx), decisões E1-E9:
+#  E1 (alterada pelo usuário em 07/10/2026) modelo só com as mulheres de 40-60 (DM2 x sem diabetes);
+#     o modelo com todas as amostras (variância estimada também com homens e outras idades) virou sensibilidade
+#  E2 g de Hedges para a meta-análise; logFC também reportado
+#  E3 efeitos aleatórios (DerSimonian-Laird), com I²
+#  E4 (ajustada pelo usuário) sem cobertura mínima: 1 estudo = descoberta; 2+ = replicado
+#  E5 FDR < 0,05 por tecido e por nível de evidência; FDR < 0,10 = sugestivo
+#  E6 fígado (1 estudo): tudo como descoberta
+#  E7 vias: 50 conjuntos Hallmark, escore por amostra, mesma meta-análise
+#  E8 sem covariáveis na análise principal; IMC e composição celular só em sensibilidade
+#  E9 sensibilidades: deixar um de fora, sem matrizes do autor, IMC, composição; 'todas as mulheres'
+#     substituída (07/10/2026, pedido do usuário: análise só no range 40-60) por 'modelo só com mulheres de 40-60'
+# =============================================================================
+versao: 1
+data: "2026-10-07"
+
+fdr: 0.05
+fdr_sugestivo: 0.10
+poder: 0.80
+
+# tipos de dado da etapa 04 -> método do modelo
+metodo:
+  voom: ["contagens", "pseudobulk_h5ad", "pseudobulk_csv"]          # contagens brutas
+  limma_trend: ["contagens_norm", "series_matrix"]                  # matriz do autor
+  # demais (cel, illumina_bruto, agilent_bruto): limma sobre o array normalizado
+matriz_autor: ["contagens_norm", "series_matrix"]                   # retirados na sensibilidade "sem matrizes do autor"
+
+vias:
+  colecao: "H"                      # MSigDB Hallmark
+  min_genes: 10                     # genes do conjunto presentes no estudo para calcular o escore
+  # escore competitivo (decisão do usuário, 08/10/2026, após a sanidade completa): desconta de cada amostra a
+  # média de todos os genes; testa "a via muda mais que o resto do genoma?". Sem isso, em GSE221156, GSE18732
+  # e GSE25462 49-80% dos conjuntos de genes ALEATÓRIOS davam p < 0,05 (deslocamento global com o DM2)
+  competitivo: true
+
+# Composição celular (sensibilidade E8/E9): escore = média dos z dos marcadores de cada tipo celular,
+# usado como covariável. Marcadores clássicos e bem expressos em dados de tecido inteiro.
+composicao:
+  ilhotas:
+    beta: ["INS", "IAPP", "MAFA"]
+    alfa: ["GCG", "IRX2", "ARX"]
+    exocrina: ["PRSS1", "CPA1", "KRT19"]
+  adiposo:
+    adipocito: ["ADIPOQ", "PLIN1", "LEP"]
+    imune: ["PTPRC", "CD68", "CD14"]
+    endotelio: ["PECAM1", "CDH5", "VWF"]
+  musculo:
+    fibra_tipo1: ["MYH7", "TNNT1", "MYL3"]
+    fibra_tipo2: ["MYH2", "MYH1", "ACTN3"]
+    imune_endotelio: ["PTPRC", "PECAM1", "VWF"]
+  sangue:
+    linfocito_t: ["CD3E", "CD3D", "CD2"]
+    monocito: ["CD14", "LYZ", "FCN1"]
+    neutrofilo: ["FCGR3B", "CSF3R", "CXCR2"]
+  figado:
+    hepatocito: ["ALB", "APOA1", "CYP3A4"]
+    imune: ["PTPRC", "CD68", "CD163"]
+
+# ---------------- decisões do usuário após a 1ª execução (07/10/2026) ----------------
+# 1) estudos com lote confundido com o grupo (etapa 04: V de Cramér > 0,6 e < 50% das amostras em
+#    lotes com os dois grupos) saem da análise principal e entram só numa sensibilidade
+#    (GSE189005: controles lidos em 2016-mar/2018, DM2 em abr-jul/2018; GSE21340)
+# 2) lote (data de leitura do array) como covariável quando há 2+ lotes e o modelo permite
+ajuste_lote: true
+# 3) só genes codificantes de proteína (evita artefatos de RNAs pequenos medidos só por algumas
+#    plataformas, como snoRNA/snRNA/miRNA no Clariom D, e torna os estudos mais comparáveis)
+so_codificantes: true
+# 4) fora da análise do genoma inteiro
+excluir_genoma:
+  GSE23561: "Matriz do autor com zeros na maioria das sondas: só 773 genes estimáveis"
+# 5) contraste que não isola o DM2: fora da análise principal, só na sensibilidade (decisão do usuário,
+#    revisão de 08/10/2026). rede: true = pode ajudar a CONSTRUIR a rede da etapa 06 (a rede não usa o status
+#    de DM2), mas não entra no teste dos módulos.
+so_sensibilidade:
+  GSE156993:
+    motivo: "contraste DM2 + dislipidemia + periodontite x controles saudáveis (comorbidades não pareadas; o grupo pareado, dislipidemia + periodontite sem DM2, tem só 2 mulheres de 40-60 e não foi processado)"
+    rede: true
+  # fígado em dois níveis (decisão do usuário, 09/10/2026, opção 2): o GSE130991 (128 x 58 mulheres) é a análise principal
+  # do fígado, como descoberta de 1 estudo grande; o GSE15653 (3 x 4) discorda dele (correlação das vias -0,15) e, pela regra
+  # "mesmo sentido em todos os estudos", vetava tudo. Ele vira estudo de REPLICAÇÃO, mostrado à parte; ajuda a construir a rede.
+  GSE15653:
+    motivo: "fígado em dois níveis: estudo pequeno (3 x 4) usado como replicação do GSE130991 (128 x 58), não como veto"
+    rede: true
+    replicacao: true
+
+# Genes de resposta imediata (decisão do usuário, 08/10/2026): sobem em minutos com isquemia/manuseio do tecido antes do
+# congelamento (tempo de cirurgia, dissociação). Ficam na análise, apenas MARCADOS (coluna resposta_imediata) para a
+# discussão: no adiposo, os genes com p < 0,05 e mesmo sentido nos 4 estudos eram BTG2, KLF9, EGR1, PPP1R15A, SLC38A2.
+genes_resposta_imediata: ["FOS", "FOSB", "FOSL1", "FOSL2", "JUN", "JUNB", "JUND", "EGR1", "EGR2", "EGR3", "EGR4", "IER2", "IER3", "IER5",
+                          "ATF3", "NR4A1", "NR4A2", "NR4A3", "DUSP1", "DUSP6", "KLF2", "KLF4", "KLF6", "KLF9", "BTG2", "ZFP36",
+                          "ZFP36L1", "ZFP36L2", "PPP1R15A", "CCN1", "CCN2", "GADD45B", "GADD45G", "SOCS3", "CEBPD", "MYC",
+                          "HSPA1A", "HSPA1B", "DNAJB1", "TXNIP", "SGK1", "MAFF", "RHOB", "CSRNP1", "ARC", "NPAS4"]
+
+# Sensibilidades de medicação (decisão do usuário, 09/10/2026): só 3 estudos informam remédios no GEO.
+#  covariavel: a medicação entra como covariável (1 = usa); excluir: amostras retiradas nessa sensibilidade
+medicacao:
+  covariavel:
+    GSE130991: {chave: "statin treatment", sim: "Statin", nome: "estatina"}      # fígado: estatina altera o colesterol (via mais forte)
+  excluir:
+    GSE18732: {chave: "metformin", valor: "1", status: "ND", nome: "controle sem diabetes em metformina"}   # músculo: 1 mulher de 40-60
+
+# Modelo principal (decisão do usuário, 07/10/2026, depois da sensibilidade do músculo): só mulheres de 40-60.
+# "todas_amostras" = modelo anterior, agora sensibilidade.
+modelo_principal: "so_F40a60"
+# Covariáveis (lote, IMC, composição) só entram se sobrarem pelo menos estes graus de liberdade residuais;
+# o efeito padronizado (g) usa sempre o desvio-padrão dos grupos sem covariáveis (correção de 07/10/2026:
+# no músculo, 5 lotes em 11 mulheres do GSE25462 geravam 113 genes "significativos" por sobreajuste)
+min_gl_covariaveis: 6
+
+# ---------------- revisão de metodologia (07/10/2026; docs/revisao_metodologia_2026-10-07.md) ----------------
+meta_metodo: "hk"                 # A3: Hartung-Knapp (modificado) como principal; DerSimonian-Laird em sensibilidade
+idade_dif_max: 5                  # A1: sensibilidade sem estudos com diferença média de idade DM2 x ND > 5 anos
+min_por_grupo_sens: 3             # A4: sensibilidade só com estudos >= 3 x 3
+sanidade:                         # P2: sinalização automática por estudo
+  frac_p05_max: 0.15              # esperado ~0,05 sem efeito
+  lambda_max: 1.5
+# M6: vias de interesse declaradas antes da etapa 06. ATENÇÃO: escolhidas DEPOIS de ver os dados da etapa 05
+# (as tendências mais consistentes); são hipóteses geradas aqui, a confirmar em dados independentes.
+vias_interesse:
+  sangue: ["HALLMARK_INTERFERON_ALPHA_RESPONSE", "HALLMARK_INTERFERON_GAMMA_RESPONSE"]
+  adiposo: ["HALLMARK_TNFA_SIGNALING_VIA_NFKB"]
+  ilhotas: ["HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION"]
+  musculo: ["HALLMARK_OXIDATIVE_PHOSPHORYLATION"]
+# M2: GSE124742 (patch-seq de ilhotas) lido na etapa 02, mas sem doador nem idade por célula no GEO
+# (só placa e poço); a ligação célula -> doador está só no material do artigo (Camunas-Soler et al.,
+# Cell Metab 2020, PMID 32302527). Fica fora; recuperável só por curadoria.
