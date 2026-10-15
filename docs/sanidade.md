@@ -1,6 +1,6 @@
 # Testes de sanidade e comparabilidade dos dados
 
-Gerado em 12/10/2026 13:10 a partir de `output/` (sanidade completa). Verificações: 1449; OK 1442; ALERTA 7; ERRO 0.
+Gerado em 15/10/2026 18:46 a partir de `output/` (sanidade completa). Verificações: 1449; OK 1442; ALERTA 7; ERRO 0.
 
 | etapa | OK | ALERTA | ERRO |
 |---|---|---|---|
@@ -176,6 +176,6 @@ Gerado em 12/10/2026 13:10 a partir de `output/` (sanidade completa). Verificaç
 | 05 | output/05_meta/estudos.csv | 12/10 12:18 | output/04_processamento/inventario.csv | 12/10 12:17 | FALSE |
 | 06 | output/06_redes/*/meta_modulos.csv | 12/10 12:19 | output/05_meta/estudos.csv | 12/10 12:18 | FALSE |
 | 07 | output/07_enriquecimento/gsea_tecidos.csv | 12/10 12:22 | output/06_redes/*/meta_modulos.csv | 12/10 12:20 | FALSE |
-| 08 | output/08_painel/candidatos.csv | 12/10 12:25 | output/07_enriquecimento/gsea_tecidos.csv | 12/10 12:22 | FALSE |
-| 09 | output/09_validacao_celula/programa_sem_e_com_ajuste.csv | 12/10 12:27 | output/08_painel/painel.csv | 12/10 12:25 | FALSE |
+| 08 | output/08_painel/candidatos.csv | 15/10 18:33 | output/07_enriquecimento/gsea_tecidos.csv | 12/10 12:22 | FALSE |
+| 09 | output/09_validacao_celula/programa_sem_e_com_ajuste.csv | 15/10 18:40 | output/08_painel/painel.csv | 15/10 18:33 | FALSE |
 | 10 | output/10_roc/meta_auc.csv | 12/10 12:29 | output/06_redes/*/meta_modulos.csv | 12/10 12:20 | FALSE |

@@ -65,8 +65,8 @@ gs_tec$nivel <- ifelse(gs_tec$fdr < RC$teste$fdr, "significativo", ifelse(gs_tec
 n_tec <- table(est05$tecido)
 gs_tec$evidencia <- ifelse(gs_tec$estudos >= 2, "replicado", "descoberta")
 gs_tec$nivel[as.integer(n_tec[gs_tec$tecido]) >= 2 & gs_tec$estudos < 2] <- ""
-# o nível exploratório exige 2+ estudos também no fígado (1 estudo: "todos no mesmo sentido" é trivial e
-# 777 vias passavam com p < 0,05); lá só entram vias sugestivas ou significativas (FDR < 0,10)
+# o nível "exploratório" (todos os estudos no mesmo sentido) exige 2+ estudos: com 1 estudo a concordância é trivial (777 vias passavam).
+# No fígado (1 estudo), as vias com p < 0,05 entram logo abaixo como "exploratório (1 estudo)" (pedido do usuário, 08/10/2026); ~5% delas se esperam ao acaso
 gs_tec$nivel[gs_tec$nivel == "exploratório" & gs_tec$estudos < 2] <- ""
 # tecido com exatamente 2 estudos (músculo, sangue): nível exploratório pelo efeito fixo (decisão do usuário, 08/10/2026)
 if (isTRUE(RC$teste$efeito_fixo_2_estudos)) { k2 <- as.integer(n_tec[gs_tec$tecido]) == 2 & gs_tec$estudos == 2

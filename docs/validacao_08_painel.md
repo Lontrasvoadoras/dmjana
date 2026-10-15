@@ -1,6 +1,6 @@
 # Validação da etapa 08: conectividade entre tecidos e painel
 
-Gerado em 12/10/2026 12:25 a partir de `output/08_painel/`.
+Gerado em 15/10/2026 18:33 a partir de `output/08_painel/`.
 
 ## 1. Candidatos por tecido e critérios
 
@@ -125,7 +125,7 @@ Os critérios não são independentes (um gene de módulo ganha juntos os pontos
 | MRPL49 | musculo | menor no DM2 | -0.92 | 0,28 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
 | AMPD1 | musculo | menor no DM2 | -0.92 | 0,3 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
 | TFB1M | musculo | menor no DM2 | -0.89 | 0,32 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
-| MRPS11 | musculo | menor no DM2 | -0.88 | 0,28 | 2/2 | 3 | sugestivo | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
+| MRPS11 | musculo | menor no DM2 | -0.88 | 0,28 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
 | ADA | musculo | menor no DM2 | -0.87 | 0,28 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
 | ADAMTS13 | musculo | maior no DM2 | 0.85 | 0,29 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |
 | FH | musculo | menor no DM2 | -0.80 | 0,42 | 2/2 | 3 | exploratório | via convergente; via selecionada no tecido (escore, todos os estudos no mesmo se |

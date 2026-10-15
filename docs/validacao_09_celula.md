@@ -1,6 +1,6 @@
 # Validação da etapa 09: programa das ilhotas com célula única
 
-Gerado em 12/10/2026 12:27 a partir de `output/09_validacao_celula/`.
+Gerado em 15/10/2026 18:40 a partir de `output/09_validacao_celula/`.
 
 ## 1. Onde os genes do programa são expressos (GSE221156, CPM médio por tipo, todas as doadoras)
 

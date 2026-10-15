@@ -75,8 +75,9 @@ cg$via_forte_ou_convergente <- paste(cg$tecido, cg$gene) %in% via_forte
 cg$ligacao_outro_tecido <- unname(liga_multi)
 cg$robusto_loo <- unname(loo[paste(cg$tecido, cg$gene)]) %in% TRUE
 cg$pontos <- cg$replicado + cg$gene_chave + cg$via_forte_ou_convergente + cg$ligacao_outro_tecido + cg$robusto_loo
-nivel_mod <- if (nrow(chave)) tapply(chave$selecao, chave$gene, function(z) z[1]) else character()
-cg$evidencia <- ifelse(cg$gene %in% names(nivel_mod), unname(nivel_mod[cg$gene]), "exploratório")
+# nível do módulo por tecido + gene (revisão de 15/10/2026: a chave era só o gene, e um gene-chave de um tecido levava o nível do seu módulo para os outros tecidos)
+nivel_mod <- if (nrow(chave)) tapply(chave$selecao, paste(chave$tecido, chave$gene), function(z) z[1]) else character()
+cg$evidencia <- ifelse(paste(cg$tecido, cg$gene) %in% names(nivel_mod), unname(nivel_mod[paste(cg$tecido, cg$gene)]), "exploratório")
 cg$evidencia[cg$estudos == 1] <- "exploratório (1 estudo)"                 # gene de tecido com 1 estudo (08/10/2026)
 cg$sentido <- ifelse(cg$g > 0, "maior no DM2", "menor no DM2")
 painel <- cg[cg$pontos >= RC$painel$pontos_min, ]; painel <- painel[order(-painel$pontos, painel$p), ]
