@@ -21,7 +21,6 @@ omnipathr-log/
 Thumbs.db
 desktop.ini
 # Scripts que geram os relatórios e documentos Word (mantidos só localmente)
-R/99_documentar.R
 atualizar_documentos.sh
 docs/intencao_*.R
 docs/relatorio_final.R
